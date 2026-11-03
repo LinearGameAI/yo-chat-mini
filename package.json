@@ -1,0 +1,39 @@
+{
+  "name": "yo-chat-mini",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "dev": "tsx watch server/index.ts",
+    "start": "NODE_ENV=production node --env-file-if-exists=.env.local dist-server/server/index.js",
+    "build": "tsc --noEmit && vite build && tsc -p tsconfig.server.json",
+    "build:minis": "npm run build && minis build",
+    "dev:tool": "node scripts/minis-local.mjs --local",
+    "dev:minis": "node scripts/minis-local.mjs",
+    "sync:content": "tsx scripts/sync-content.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.1.0",
+    "tiktok-minis-cli": "0.0.7",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  },
+  "overrides": {
+    "tiktok-minis-cli": { "handlebars": "4.7.10", "express": "4.22.3", "qs": "6.17.1" }
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-server/
+.data/
+.env*
+!.env.example
+!.env.tiktok.example
+test-results/
+playwright-report/
+*.log

@@ -1,0 +1,1037 @@
+{
+  "fetchedAt": "2026-11-02T16:29:03.542Z",
+  "sourceUrl": "https://api.lineargame.ai/api/v1/feed/games/900a3d4e-6589-4c66-8287-d9bd06937c11",
+  "detail": {
+    "game": {
+      "game_id": "900a3d4e-6589-4c66-8287-d9bd06937c11",
+      "short_name": "900a3d4e-6589-4c66-8287-d9bd06937c11",
+      "cover_image": "https://image-dit.lineargame.ai/assets/2026/09/24/the-spooky-dolls-revenge-16x9_1b0e7417-2bb5-4d7b-80e8-be5f785002f2_af54885b-af54-47e0-9481-6db7665e4119.jpg",
+      "portrait_cover_image": "https://image-dit.lineargame.ai/assets/2026/09/24/the-spooky-dolls-revenge-3x4_315e5cc1-7066-46ef-aebf-16de0d8fb3c0_fd78abcf-049b-47c0-9d4b-a3c02eb76eef.jpg",
+      "title": "The Spooky Doll’s Revenge",
+      "tags": "Fantasy,Thriller",
+      "description": "A girl pushed into a coma by her romantic rival has her soul trapped inside a porcelain doll from her fiancé, then uses supernatural powers with her best friend to expose the culprit and reclaim her body.",
+      "creator_id": "cc54d046-d921-4851-a03a-2c630d32c38c",
+      "creator_name": "L Studio 123123",
+      "creator_avatar": "https://image-dit.lineargame.ai/static/avatars/cc54d046-d921-4851-a03a-2c630d32c38c_3.png",
+      "game_url": "https://game.yoroll.ai/?config=900a3d4e-6589-4c66-8287-d9bd06937c11",
+      "game_json_url": "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/game.json",
+      "share_link": "https://app.yoroll.ai/feed/900a3d4e-6589-4c66-8287-d9bd06937c11",
+      "duration": 1052696,
+      "like_count": 0,
+      "share_count": 16,
+      "likes": 0,
+      "shares": 16,
+      "liked": false,
+      "favorited": false,
+      "favorite_count": 8,
+      "display_count": 8825,
+      "preview_video_url": "https://d37ji9cq1jykee.cloudfront.net/assets/2026/08/17/married-doll-4_english_subtitles_81472313-464e-4b0a-a2db-bb942f65a057_9b7d1bc7-61f1-4f8e-a542-540512ec2195.mp4",
+      "sort_order": 88,
+      "is_recommended": false,
+      "is_visible": true,
+      "need_translate": false,
+      "game_engine": "drama",
+      "has_paid_content": false,
+      "has_membership_content": false,
+      "platforms": [
+        "web",
+        "app"
+      ],
+      "app_platforms": [
+        "ios",
+        "android"
+      ],
+      "supported_devices": [],
+      "characters": [
+        {
+          "name": "Daniel Renault | He Hears You",
+          "image_url": "https://image-dit.lineargame.ai/yochat/characters/uploads/ade2bd584e4720989543f1215a1686c0b1f9534fdb5a5be982f1da2bfb55391b.jpg",
+          "yochat_id": "yt_daniel_renault_married_doll"
+        }
+      ],
+      "publish_time": "2026-07-09"
+    }
+  },
+  "manifest": {
+    "chapters": [
+      {
+        "coverImage": "Covers/1.jpg",
+        "dataPath": "1.json",
+        "externalId": "48a70390-4eaa-4240-aaee-26417d3f431b",
+        "id": "1",
+        "title": "EP01"
+      },
+      {
+        "coverImage": "Covers/2.jpg",
+        "dataPath": "2.json",
+        "externalId": "dc4e4e08-73aa-4d87-be96-829044919edf",
+        "id": "2",
+        "title": "EP02"
+      },
+      {
+        "coverImage": "Covers/3.jpg",
+        "dataPath": "3.json",
+        "externalId": "bdbe402d-ea46-498b-93b0-fdb28686dcd9",
+        "id": "3",
+        "title": "EP03"
+      },
+      {
+        "coverImage": "Covers/4.jpg",
+        "dataPath": "4.json",
+        "externalId": "6e978bcb-5cb5-4f4d-a049-f7a130915636",
+        "id": "4",
+        "title": "EP04"
+      },
+      {
+        "coverImage": "Covers/5.jpg",
+        "dataPath": "5.json",
+        "externalId": "c2e1df74-d273-4ed5-aa4a-049f0a02f09d",
+        "id": "5",
+        "title": "EP05"
+      },
+      {
+        "coverImage": "Covers/6.jpg",
+        "dataPath": "6.json",
+        "externalId": "0a5c2128-6141-4747-9fc1-8b02153c08ca",
+        "id": "6",
+        "title": "EP06"
+      },
+      {
+        "coverImage": "Covers/7.jpg",
+        "dataPath": "7.json",
+        "externalId": "1e039b93-5b4a-443b-b064-a4b9d9d2ea22",
+        "id": "7",
+        "title": "EP07"
+      },
+      {
+        "coverImage": "Covers/8.jpg",
+        "dataPath": "8.json",
+        "externalId": "c4c7899d-2816-496b-a73b-99a216aa364c",
+        "id": "8",
+        "title": "EP08"
+      },
+      {
+        "coverImage": "Covers/9.jpg",
+        "dataPath": "9.json",
+        "externalId": "b1e03b50-9b75-4ff4-8b0d-b97c84da3abb",
+        "id": "9",
+        "title": "EP09"
+      },
+      {
+        "coverImage": "Covers/10.jpg",
+        "dataPath": "10.json",
+        "externalId": "7054da4d-42c5-4184-ac7d-d2d2aa2bfe2a",
+        "id": "10",
+        "title": "EP10"
+      }
+    ],
+    "mediaType": "mp4",
+    "meta": {
+      "bg_url": "Covers/the-spooky-dolls-revenge-16x9_1b0e7417-2bb5-4d7b-80e8-be5f785002f2_af54885b-af54-47e0-9481-6db7665e4119.jpg",
+      "common_bg_url": "Covers/the-spooky-dolls-revenge-16x9_1b0e7417-2bb5-4d7b-80e8-be5f785002f2_af54885b-af54-47e0-9481-6db7665e4119.jpg",
+      "coverImage": "Covers/the-spooky-dolls-revenge-16x9_1b0e7417-2bb5-4d7b-80e8-be5f785002f2_af54885b-af54-47e0-9481-6db7665e4119.jpg",
+      "description": "A girl pushed into a coma by her romantic rival has her soul trapped inside a porcelain doll from her fiancé, then uses supernatural powers with her best friend to expose the culprit and reclaim her body.",
+      "preview_url": "Videos/married-doll-4_english_subtitles_81472313-464e-4b0a-a2db-bb942f65a057_9b7d1bc7-61f1-4f8e-a542-540512ec2195.mp4",
+      "tags": [
+        "fantasy",
+        "thriller"
+      ],
+      "title": "The Spooky Doll’s Revenge"
+    },
+    "screenOrientation": "Portrait",
+    "stats": {
+      "favor": 0
+    },
+    "themeStyle": 0
+  },
+  "chapters": {
+    "1": {
+      "externalId": "48a70390-4eaa-4240-aaee-26417d3f431b",
+      "meta": {
+        "description": "",
+        "startNodeId": "b330fe5e-8bb6-477b-9e17-34f65b411919",
+        "title": "EP01"
+      },
+      "nodes": [
+        {
+          "id": "1910c1f2-402b-4df7-beaf-7b042851b5c8",
+          "title": "Belive her",
+          "video": "Videos/B01_df548aff_039cffce-a4ff-46e4-b424-ee8ff26445ba.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01_df548aff_039cffce-a4ff-46e4-b424-ee8ff26445ba.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01_df548aff_039cffce-a4ff-46e4-b424-ee8ff26445ba.jpg",
+          "next": "454bbf3a-d258-49ee-baa0-820248c19cf5"
+        },
+        {
+          "id": "454bbf3a-d258-49ee-baa0-820248c19cf5",
+          "title": "Unimagined",
+          "video": "Videos/C_09ce58b7_af8422ff-a5da-4b8b-a0f9-2cfb3702adab.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C_09ce58b7_af8422ff-a5da-4b8b-a0f9-2cfb3702adab.zh.srt"
+          },
+          "coverImage": "Thumbnails/C_09ce58b7_af8422ff-a5da-4b8b-a0f9-2cfb3702adab.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "b330fe5e-8bb6-477b-9e17-34f65b411919",
+          "title": "The beginning",
+          "video": "Videos/A--2-_850aa1f4_c26e214a-362b-4008-b56b-055a97827fa7.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A--2-_850aa1f4_c26e214a-362b-4008-b56b-055a97827fa7.zh.srt"
+          },
+          "coverImage": "Thumbnails/A--2-_850aa1f4_c26e214a-362b-4008-b56b-055a97827fa7.jpg",
+          "question": "You choose how to respond...",
+          "duration": 10,
+          "defaultChoice": "choice_6e9ff19da4e04ab588b5d0caef49d111_2",
+          "choices": [
+            {
+              "key": "choice_6e9ff19da4e04ab588b5d0caef49d111_1",
+              "label": "“Why should I?”",
+              "next": "1910c1f2-402b-4df7-beaf-7b042851b5c8",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_6e9ff19da4e04ab588b5d0caef49d111_2",
+              "label": "Agree",
+              "next": "4a321c9c-468b-4345-8429-bd336a81db8b",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "4a321c9c-468b-4345-8429-bd336a81db8b",
+          "title": "Don't Blive her",
+          "video": "Videos/B02_c3e9b4c1_fc061bde-cade-4a20-a18c-6528457f88f7.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02_c3e9b4c1_fc061bde-cade-4a20-a18c-6528457f88f7.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02_c3e9b4c1_fc061bde-cade-4a20-a18c-6528457f88f7.jpg",
+          "next": "454bbf3a-d258-49ee-baa0-820248c19cf5"
+        }
+      ]
+    },
+    "2": {
+      "externalId": "dc4e4e08-73aa-4d87-be96-829044919edf",
+      "meta": {
+        "description": "",
+        "startNodeId": "f0e9e545-a2c2-48c7-9f45-ecabeaffdbab",
+        "title": "EP02"
+      },
+      "nodes": [
+        {
+          "id": "aae93b27-acc8-4b9d-8419-cbbfc8cb9ccf",
+          "title": "Doll",
+          "video": "Videos/C_854dbc07_c2aae9f3-945b-4458-a7fe-0c3fdb91446b.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C_854dbc07_c2aae9f3-945b-4458-a7fe-0c3fdb91446b.zh.srt"
+          },
+          "coverImage": "Thumbnails/C_854dbc07_c2aae9f3-945b-4458-a7fe-0c3fdb91446b.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "a0c67cd1-db2e-40a3-bbc4-a4b4fe562bac",
+          "title": "waked up?",
+          "video": "Videos/B01--2-_4dd3ad7c_bafd3456-c5ff-4fee-9c94-aec491a260a3.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01--2-_4dd3ad7c_bafd3456-c5ff-4fee-9c94-aec491a260a3.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01--2-_4dd3ad7c_bafd3456-c5ff-4fee-9c94-aec491a260a3.jpg",
+          "next": "aae93b27-acc8-4b9d-8419-cbbfc8cb9ccf"
+        },
+        {
+          "id": "f0e9e545-a2c2-48c7-9f45-ecabeaffdbab",
+          "title": "Wake up PLEASE!",
+          "video": "Videos/A_be40e051_efd09ae9-a896-42ee-a4c0-9355578ffcb1.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_be40e051_efd09ae9-a896-42ee-a4c0-9355578ffcb1.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_be40e051_efd09ae9-a896-42ee-a4c0-9355578ffcb1.jpg",
+          "qte": {
+            "title": "第二集A.mp4",
+            "type": "click",
+            "duration": 5,
+            "delay_from_start_seconds": 36,
+            "next_node_map": {
+              "0": "a0b7eb51-4241-4f43-b54f-2a85ddb528ec",
+              "1": "a0c67cd1-db2e-40a3-bbc4-a4b4fe562bac",
+              "2": "a0b7eb51-4241-4f43-b54f-2a85ddb528ec"
+            },
+            "next_node_immediate_settle": {
+              "0": true,
+              "1": true,
+              "2": false
+            },
+            "target_episode_map": {
+              "0": "a0b7eb51-4241-4f43-b54f-2a85ddb528ec",
+              "1": "a0c67cd1-db2e-40a3-bbc4-a4b4fe562bac",
+              "2": "a0b7eb51-4241-4f43-b54f-2a85ddb528ec"
+            },
+            "instruction_text_1": "Wake up！",
+            "area_position": "0.5,0.18",
+            "area_size": "0.5,0.5",
+            "click_count": "1"
+          }
+        },
+        {
+          "id": "a0b7eb51-4241-4f43-b54f-2a85ddb528ec",
+          "title": "may fail?",
+          "video": "Videos/B02--2-_b583e695_99e36751-af71-45c3-a6c5-bed4a91042ad.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02--2-_b583e695_99e36751-af71-45c3-a6c5-bed4a91042ad.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02--2-_b583e695_99e36751-af71-45c3-a6c5-bed4a91042ad.jpg",
+          "next": "aae93b27-acc8-4b9d-8419-cbbfc8cb9ccf"
+        }
+      ]
+    },
+    "3": {
+      "externalId": "bdbe402d-ea46-498b-93b0-fdb28686dcd9",
+      "meta": {
+        "description": "",
+        "startNodeId": "1c7b81fc-e85b-4dbc-af19-ab6e8a36fa3f",
+        "title": "EP03"
+      },
+      "nodes": [
+        {
+          "id": "87ce4d82-a68d-4b58-95ed-f9aa2707b78d",
+          "title": "Sencond sight",
+          "video": "Videos/B02--2-_4aee14db_f52f5aa6-6304-4af6-8eaa-15292537e897.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02--2-_4aee14db_f52f5aa6-6304-4af6-8eaa-15292537e897.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02--2-_4aee14db_f52f5aa6-6304-4af6-8eaa-15292537e897.jpg",
+          "next": "e6b4a972-1dee-42fa-88f2-e61178cadd77"
+        },
+        {
+          "id": "e6b4a972-1dee-42fa-88f2-e61178cadd77",
+          "title": "The emergency 02",
+          "video": "Videos/C_d6ffd0c9_f69b5fd5-0a26-48f1-97ad-d268ffe67498.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C_d6ffd0c9_f69b5fd5-0a26-48f1-97ad-d268ffe67498.zh.srt"
+          },
+          "coverImage": "Thumbnails/C_d6ffd0c9_f69b5fd5-0a26-48f1-97ad-d268ffe67498.jpg",
+          "question": "Stop them with the...",
+          "duration": 3,
+          "delay_from_start_seconds": 18,
+          "defaultChoice": "choice_760efdfe12a544fe83e244bc6ae6d48d_1",
+          "choices": [
+            {
+              "key": "choice_760efdfe12a544fe83e244bc6ae6d48d_1",
+              "label": "Mirror!",
+              "next": "23596b06-3185-4e16-9eb4-af4d62893e29",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_760efdfe12a544fe83e244bc6ae6d48d_2",
+              "label": "Plant!",
+              "next": "76d82b18-8e66-413a-adb8-d923b3c6ce62",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "23596b06-3185-4e16-9eb4-af4d62893e29",
+          "title": "Don't touch my man",
+          "video": "Videos/D01--2-_db8d407d_9d8f5c82-f6de-40e8-9246-5133fe13352b.mp4",
+          "subtitles": {
+            "zh": "Subtitles/D01--2-_db8d407d_9d8f5c82-f6de-40e8-9246-5133fe13352b.zh.srt"
+          },
+          "coverImage": "Thumbnails/D01--2-_db8d407d_9d8f5c82-f6de-40e8-9246-5133fe13352b.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "76d82b18-8e66-413a-adb8-d923b3c6ce62",
+          "title": "Don't Touch My MAN",
+          "video": "Videos/D02--2-_50b752a2_9ff2d86e-4aeb-48d1-88bc-e93595a62ebe.mp4",
+          "subtitles": {
+            "zh": "Subtitles/D02--2-_50b752a2_9ff2d86e-4aeb-48d1-88bc-e93595a62ebe.zh.srt"
+          },
+          "coverImage": "Thumbnails/D02--2-_50b752a2_9ff2d86e-4aeb-48d1-88bc-e93595a62ebe.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "1c7b81fc-e85b-4dbc-af19-ab6e8a36fa3f",
+          "title": "The emergency 01",
+          "video": "Videos/A_d0b86a81_ddaa580e-b1fa-4c57-9bd9-b9112effe188.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_d0b86a81_ddaa580e-b1fa-4c57-9bd9-b9112effe188.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_d0b86a81_ddaa580e-b1fa-4c57-9bd9-b9112effe188.jpg",
+          "question": "Should Daniel use second sight?",
+          "duration": 8,
+          "defaultChoice": "choice_e6a163df38e94340929cb5c7814060ea_1",
+          "choices": [
+            {
+              "key": "choice_e6a163df38e94340929cb5c7814060ea_1",
+              "label": "Use",
+              "next": "87ce4d82-a68d-4b58-95ed-f9aa2707b78d",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_e6a163df38e94340929cb5c7814060ea_2",
+              "label": "Don't Use",
+              "next": "033f208f-8ce3-4b11-b364-ca8114a5d0fb",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "033f208f-8ce3-4b11-b364-ca8114a5d0fb",
+          "title": "Observe",
+          "video": "Videos/B01--2-_636260e1_2903c9d1-4c06-4cb2-b11f-0a442ca850a5.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01--2-_636260e1_2903c9d1-4c06-4cb2-b11f-0a442ca850a5.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01--2-_636260e1_2903c9d1-4c06-4cb2-b11f-0a442ca850a5.jpg",
+          "next": "e6b4a972-1dee-42fa-88f2-e61178cadd77"
+        }
+      ]
+    },
+    "4": {
+      "externalId": "6e978bcb-5cb5-4f4d-a049-f7a130915636",
+      "meta": {
+        "description": "",
+        "startNodeId": "f4866f10-d464-43d5-be34-444c9ce40f98",
+        "title": "EP04"
+      },
+      "nodes": [
+        {
+          "id": "4c603729-a7f7-45b1-a5c3-02823d290a1c",
+          "title": "Jia Lu",
+          "video": "Videos/B01--2-_aa17ee3f_239f2a54-484a-4c88-b65c-73834e097bcb.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01--2-_aa17ee3f_239f2a54-484a-4c88-b65c-73834e097bcb.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01--2-_aa17ee3f_239f2a54-484a-4c88-b65c-73834e097bcb.jpg",
+          "next": "949f34d0-98c4-407a-8221-8afde63afb43"
+        },
+        {
+          "id": "949f34d0-98c4-407a-8221-8afde63afb43",
+          "title": "Help Keaghlan!",
+          "video": "Videos/C_c05aaf2e_50dd61c3-98f9-40aa-8f1d-5e1946dcb3cc.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C_c05aaf2e_50dd61c3-98f9-40aa-8f1d-5e1946dcb3cc.zh.srt"
+          },
+          "coverImage": "Thumbnails/C_c05aaf2e_50dd61c3-98f9-40aa-8f1d-5e1946dcb3cc.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "f4866f10-d464-43d5-be34-444c9ce40f98",
+          "title": "He looks so sad",
+          "video": "Videos/A_775cba42_2bfc2155-cc5e-41ae-b887-676e74c6118f.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_775cba42_2bfc2155-cc5e-41ae-b887-676e74c6118f.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_775cba42_2bfc2155-cc5e-41ae-b887-676e74c6118f.jpg",
+          "question": "Who first...",
+          "duration": 8,
+          "defaultChoice": "choice_ab83b833674b4d1a98f5fe088488999d_2",
+          "choices": [
+            {
+              "key": "choice_ab83b833674b4d1a98f5fe088488999d_1",
+              "label": "Lucy",
+              "next": "a7927f1b-e993-460d-a16c-c04ba21617b0",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_ab83b833674b4d1a98f5fe088488999d_2",
+              "label": "Jia Lu",
+              "next": "4c603729-a7f7-45b1-a5c3-02823d290a1c",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "a7927f1b-e993-460d-a16c-c04ba21617b0",
+          "title": "Lucy",
+          "video": "Videos/B02--2-_9e1fddeb_d678a16c-cdd6-457b-9b3e-e8b462c059c9.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02--2-_9e1fddeb_d678a16c-cdd6-457b-9b3e-e8b462c059c9.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02--2-_9e1fddeb_d678a16c-cdd6-457b-9b3e-e8b462c059c9.jpg",
+          "next": "949f34d0-98c4-407a-8221-8afde63afb43"
+        }
+      ]
+    },
+    "5": {
+      "externalId": "c2e1df74-d273-4ed5-aa4a-049f0a02f09d",
+      "meta": {
+        "description": "",
+        "startNodeId": "fa34f881-d6e9-4f70-9ded-815dc8563a21",
+        "title": "EP05"
+      },
+      "nodes": [
+        {
+          "id": "af172bc3-170d-4b37-b5dd-20e7256ea704",
+          "title": "oh...",
+          "video": "Videos/1_ebb3a734_76304a62-ea5c-47d0-a3f0-288c420c3224.mp4",
+          "subtitles": {
+            "zh": "Subtitles/1_ebb3a734_76304a62-ea5c-47d0-a3f0-288c420c3224.zh.srt"
+          },
+          "coverImage": "Thumbnails/1_ebb3a734_76304a62-ea5c-47d0-a3f0-288c420c3224.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "dddd6c69-c7bf-44db-8c19-bbc18d32885d",
+          "title": "Run!",
+          "video": "Videos/1-1_a78a6561_31655d9c-9cc7-43c5-bc25-3e0f4e31c1f9.mp4",
+          "subtitles": {
+            "zh": "Subtitles/1-1_a78a6561_31655d9c-9cc7-43c5-bc25-3e0f4e31c1f9.zh.srt"
+          },
+          "coverImage": "Thumbnails/1-1_a78a6561_31655d9c-9cc7-43c5-bc25-3e0f4e31c1f9.jpg",
+          "next": "bdf3ead6-6ab2-43fc-b061-a1a427201f76"
+        },
+        {
+          "id": "de530369-6049-4a94-a566-e23ddfba2273",
+          "title": "No",
+          "video": "Videos/4-v2_27436a23_74d6248b-02a8-4ed9-a999-713ae3a49171.mp4",
+          "subtitles": {
+            "zh": "Subtitles/4-v2_27436a23_74d6248b-02a8-4ed9-a999-713ae3a49171.zh.srt"
+          },
+          "coverImage": "Thumbnails/4-v2_27436a23_74d6248b-02a8-4ed9-a999-713ae3a49171.jpg",
+          "next": "af172bc3-170d-4b37-b5dd-20e7256ea704"
+        },
+        {
+          "id": "fa34f881-d6e9-4f70-9ded-815dc8563a21",
+          "title": "Help Keaghlan!",
+          "video": "Videos/v2_25936ee6_33c2e978-15cc-4cc8-9e6a-0256b6ce42b9.mp4",
+          "subtitles": {
+            "zh": "Subtitles/v2_25936ee6_33c2e978-15cc-4cc8-9e6a-0256b6ce42b9.zh.srt"
+          },
+          "coverImage": "Thumbnails/v2_25936ee6_33c2e978-15cc-4cc8-9e6a-0256b6ce42b9.jpg",
+          "question": "Help Keaghlan!",
+          "duration": 4,
+          "defaultChoice": "choice_6481e290aeab45a4bffe6ef1ab755f70_1",
+          "choices": [
+            {
+              "key": "choice_6481e290aeab45a4bffe6ef1ab755f70_1",
+              "label": "Run!",
+              "next": "dddd6c69-c7bf-44db-8c19-bbc18d32885d",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_6481e290aeab45a4bffe6ef1ab755f70_2",
+              "label": "Telekinesis!",
+              "next": "2cb1d6dd-5c2b-4610-9dab-02b5227aa2fe",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "bdf3ead6-6ab2-43fc-b061-a1a427201f76",
+          "title": "Tell her?",
+          "video": "Videos/v2-1_a7dc1247_234c04e4-60ea-4bac-bd67-aa45528edac3.mp4",
+          "subtitles": {
+            "zh": "Subtitles/v2-1_a7dc1247_234c04e4-60ea-4bac-bd67-aa45528edac3.zh.srt"
+          },
+          "coverImage": "Thumbnails/v2-1_a7dc1247_234c04e4-60ea-4bac-bd67-aa45528edac3.jpg",
+          "question": "Should tell the truth to Keaghlan?",
+          "duration": 8,
+          "defaultChoice": "choice_80042a750d834c13a033c99ae884c05d_2",
+          "choices": [
+            {
+              "key": "choice_80042a750d834c13a033c99ae884c05d_1",
+              "label": "Tell her",
+              "next": "84901eec-c561-4a0d-ad83-f6697d891d8b",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_80042a750d834c13a033c99ae884c05d_2",
+              "label": "Don't tell her",
+              "next": "de530369-6049-4a94-a566-e23ddfba2273",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "84901eec-c561-4a0d-ad83-f6697d891d8b",
+          "title": "Yes",
+          "video": "Videos/3-1--2-_85c41d1e_f604b2bc-fa2a-4647-869e-5c4142448791.mp4",
+          "subtitles": {
+            "zh": "Subtitles/3-1--2-_85c41d1e_f604b2bc-fa2a-4647-869e-5c4142448791.zh.srt"
+          },
+          "coverImage": "Thumbnails/3-1--2-_85c41d1e_f604b2bc-fa2a-4647-869e-5c4142448791.jpg",
+          "next": "af172bc3-170d-4b37-b5dd-20e7256ea704"
+        },
+        {
+          "id": "2cb1d6dd-5c2b-4610-9dab-02b5227aa2fe",
+          "title": "Telekinesis!",
+          "video": "Videos/2-v2_7c22d5c4_db66832c-2ae5-4c28-beb5-bf567a183a17.mp4",
+          "subtitles": {
+            "zh": "Subtitles/2-v2_7c22d5c4_db66832c-2ae5-4c28-beb5-bf567a183a17.zh.srt"
+          },
+          "coverImage": "Thumbnails/2-v2_7c22d5c4_db66832c-2ae5-4c28-beb5-bf567a183a17.jpg",
+          "next": "bdf3ead6-6ab2-43fc-b061-a1a427201f76"
+        }
+      ]
+    },
+    "6": {
+      "externalId": "0a5c2128-6141-4747-9fc1-8b02153c08ca",
+      "meta": {
+        "description": "",
+        "startNodeId": "f08058ef-d2bb-4588-b62e-e7420dc76f4d",
+        "title": "EP06"
+      },
+      "nodes": [
+        {
+          "id": "af8a0d5c-6f79-45f7-888b-7e85d26e2bdc",
+          "title": "NONONONO!",
+          "video": "Videos/B02_451b51b3_d26019f2-4e2e-401a-9f6b-61f6c1c6f065.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02_451b51b3_d26019f2-4e2e-401a-9f6b-61f6c1c6f065.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02_451b51b3_d26019f2-4e2e-401a-9f6b-61f6c1c6f065.jpg",
+          "next": "08e4e9a6-be31-4c0b-97b9-74ac38aabc5c"
+        },
+        {
+          "id": "a9f32988-96a2-4ba9-a1a0-ee7c056f76bd",
+          "title": "the POWER is...",
+          "video": "Videos/B01_dadd0660_a219ab5d-4691-42d7-80ec-c01e93f73ba0.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01_dadd0660_a219ab5d-4691-42d7-80ec-c01e93f73ba0.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01_dadd0660_a219ab5d-4691-42d7-80ec-c01e93f73ba0.jpg",
+          "next": "08e4e9a6-be31-4c0b-97b9-74ac38aabc5c"
+        },
+        {
+          "id": "08e4e9a6-be31-4c0b-97b9-74ac38aabc5c",
+          "title": "The BEST friend",
+          "video": "Videos/C--2-_0d39d050_7d1781e0-6c9e-4393-bc66-15e4ceaee43f.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C--2-_0d39d050_7d1781e0-6c9e-4393-bc66-15e4ceaee43f.zh.srt"
+          },
+          "coverImage": "Thumbnails/C--2-_0d39d050_7d1781e0-6c9e-4393-bc66-15e4ceaee43f.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "f08058ef-d2bb-4588-b62e-e7420dc76f4d",
+          "title": "Oh my god!",
+          "video": "Videos/A_aae17e9b_33ddb477-11cd-4814-be6c-eb93d04faee1.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_aae17e9b_33ddb477-11cd-4814-be6c-eb93d04faee1.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_aae17e9b_33ddb477-11cd-4814-be6c-eb93d04faee1.jpg",
+          "question": "What should you do now?",
+          "duration": 5,
+          "defaultChoice": "choice_c9628aaf5806442981dd3b80da1445e8_1",
+          "choices": [
+            {
+              "key": "choice_c9628aaf5806442981dd3b80da1445e8_1",
+              "label": "Pin her down",
+              "next": "a9f32988-96a2-4ba9-a1a0-ee7c056f76bd",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_c9628aaf5806442981dd3b80da1445e8_2",
+              "label": "Throw her",
+              "next": "af8a0d5c-6f79-45f7-888b-7e85d26e2bdc",
+              "immediate_settle": true
+            }
+          ]
+        }
+      ]
+    },
+    "7": {
+      "externalId": "1e039b93-5b4a-443b-b064-a4b9d9d2ea22",
+      "meta": {
+        "description": "",
+        "startNodeId": "7c939cbe-8539-4a40-b010-040bdc0079ad",
+        "title": "EP07"
+      },
+      "nodes": [
+        {
+          "id": "2bc4551a-71e3-49bb-bbdc-0e59c08d27a2",
+          "title": "RUN!",
+          "video": "Videos/3-1_4238ec1e_1bd802c7-4b5f-4112-a5f1-dd65fc819d30.mp4",
+          "subtitles": {
+            "zh": "Subtitles/3-1_4238ec1e_1bd802c7-4b5f-4112-a5f1-dd65fc819d30.zh.srt"
+          },
+          "coverImage": "Thumbnails/3-1_4238ec1e_1bd802c7-4b5f-4112-a5f1-dd65fc819d30.jpg",
+          "next": "8fc74279-71ad-4d46-8f55-df5fc5bbc4de"
+        },
+        {
+          "id": "1e87b29c-0d93-401b-8068-9d51eb196561",
+          "title": "Straight",
+          "video": "Videos/1--2-_1102cda9_5300cee8-d687-4f68-a08d-40a38a38097e.mp4",
+          "subtitles": {
+            "zh": "Subtitles/1--2-_1102cda9_5300cee8-d687-4f68-a08d-40a38a38097e.zh.srt"
+          },
+          "coverImage": "Thumbnails/1--2-_1102cda9_5300cee8-d687-4f68-a08d-40a38a38097e.jpg",
+          "next": "7a0e8a03-215a-427a-a6c8-7d3b6422f738"
+        },
+        {
+          "id": "7a0e8a03-215a-427a-a6c8-7d3b6422f738",
+          "title": "OMG!",
+          "video": "Videos/v2-1_a41a1e88_d5807643-b38b-4b21-9ec5-29e2baa8aff2.mp4",
+          "subtitles": {
+            "zh": "Subtitles/v2-1_a41a1e88_d5807643-b38b-4b21-9ec5-29e2baa8aff2.zh.srt"
+          },
+          "coverImage": "Thumbnails/v2-1_a41a1e88_d5807643-b38b-4b21-9ec5-29e2baa8aff2.jpg",
+          "question": "How to save yourself!!!",
+          "duration": 5,
+          "defaultChoice": "choice_589de64bc1554cfd9527e4cd467c9416_1",
+          "choices": [
+            {
+              "key": "choice_589de64bc1554cfd9527e4cd467c9416_1",
+              "label": "Run!",
+              "next": "2bc4551a-71e3-49bb-bbdc-0e59c08d27a2",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_589de64bc1554cfd9527e4cd467c9416_2",
+              "label": "Stick them with a pin!",
+              "next": "ad3bb134-9d0c-4546-8683-68c81001ad63",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "8fc74279-71ad-4d46-8f55-df5fc5bbc4de",
+          "title": "Safe...",
+          "video": "Videos/1_ff5f9b1e_655aee5c-c4a2-46a6-b0e9-fe1bd21412d5.mp4",
+          "subtitles": {
+            "zh": "Subtitles/1_ff5f9b1e_655aee5c-c4a2-46a6-b0e9-fe1bd21412d5.zh.srt"
+          },
+          "coverImage": "Thumbnails/1_ff5f9b1e_655aee5c-c4a2-46a6-b0e9-fe1bd21412d5.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "d93d8e0c-dd61-4290-9d0e-051a1d606134",
+          "title": "Clever",
+          "video": "Videos/2--2-_0552f4b9_d803439e-d7ab-48c5-b82e-e52fdcb68204.mp4",
+          "subtitles": {
+            "zh": "Subtitles/2--2-_0552f4b9_d803439e-d7ab-48c5-b82e-e52fdcb68204.zh.srt"
+          },
+          "coverImage": "Thumbnails/2--2-_0552f4b9_d803439e-d7ab-48c5-b82e-e52fdcb68204.jpg",
+          "next": "7a0e8a03-215a-427a-a6c8-7d3b6422f738"
+        },
+        {
+          "id": "7c939cbe-8539-4a40-b010-040bdc0079ad",
+          "title": "Infiltration operation",
+          "video": "Videos/v2-1_fd7d7715_aa60768d-aac2-4601-af3c-127c24610db7.mp4",
+          "subtitles": {
+            "zh": "Subtitles/v2-1_fd7d7715_aa60768d-aac2-4601-af3c-127c24610db7.zh.srt"
+          },
+          "coverImage": "Thumbnails/v2-1_fd7d7715_aa60768d-aac2-4601-af3c-127c24610db7.jpg",
+          "question": "What should we do now?",
+          "duration": 10,
+          "defaultChoice": "choice_b9675293492b4a31ad8c4e92f8fb6e63_2",
+          "choices": [
+            {
+              "key": "choice_b9675293492b4a31ad8c4e92f8fb6e63_1",
+              "label": "Sneak inside",
+              "next": "1e87b29c-0d93-401b-8068-9d51eb196561",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_b9675293492b4a31ad8c4e92f8fb6e63_2",
+              "label": "Just walk in",
+              "next": "d93d8e0c-dd61-4290-9d0e-051a1d606134",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "ad3bb134-9d0c-4546-8683-68c81001ad63",
+          "title": "PIN HER!",
+          "video": "Videos/4-v2-1--2-_f5bd2b09_a4042f6b-c00f-498f-add0-45d37ba08b48.mp4",
+          "subtitles": {
+            "zh": "Subtitles/4-v2-1--2-_f5bd2b09_a4042f6b-c00f-498f-add0-45d37ba08b48.zh.srt"
+          },
+          "coverImage": "Thumbnails/4-v2-1--2-_f5bd2b09_a4042f6b-c00f-498f-add0-45d37ba08b48.jpg",
+          "next": "8fc74279-71ad-4d46-8f55-df5fc5bbc4de"
+        }
+      ]
+    },
+    "8": {
+      "externalId": "c4c7899d-2816-496b-a73b-99a216aa364c",
+      "meta": {
+        "description": "",
+        "startNodeId": "a02d61dc-d6f5-4a6e-bd66-36842e9f4e9f",
+        "title": "EP08"
+      },
+      "nodes": [
+        {
+          "id": "c6468941-c67a-49bf-9c9a-a0ed4b1e12aa",
+          "title": "Be quiet...",
+          "video": "Videos/B02--2-_ce67b9aa_b275ccc0-0c42-439f-9175-4030fabd1d04.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02--2-_ce67b9aa_b275ccc0-0c42-439f-9175-4030fabd1d04.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02--2-_ce67b9aa_b275ccc0-0c42-439f-9175-4030fabd1d04.jpg",
+          "next": "fea15c6e-011c-4f1d-96de-37a645a6c681"
+        },
+        {
+          "id": "ad53f275-9b02-413c-9998-6513af1931d8",
+          "title": "Dog Toy",
+          "video": "Videos/D02_08f10dfa_ad8e5c16-b594-44c5-a3e5-aed3159aa281.mp4",
+          "subtitles": {
+            "zh": "Subtitles/D02_08f10dfa_ad8e5c16-b594-44c5-a3e5-aed3159aa281.zh.srt"
+          },
+          "coverImage": "Thumbnails/D02_08f10dfa_ad8e5c16-b594-44c5-a3e5-aed3159aa281.jpg",
+          "next": "9b22c62f-191b-40e1-bbc1-94d6fef83d6e"
+        },
+        {
+          "id": "a02d61dc-d6f5-4a6e-bd66-36842e9f4e9f",
+          "title": "Daniel...",
+          "video": "Videos/A--2-_cde98673_117d2f1f-c666-482d-b37e-0d1bcd469d22.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A--2-_cde98673_117d2f1f-c666-482d-b37e-0d1bcd469d22.zh.srt"
+          },
+          "coverImage": "Thumbnails/A--2-_cde98673_117d2f1f-c666-482d-b37e-0d1bcd469d22.jpg",
+          "question": "He looks sad...",
+          "duration": 5,
+          "delay_from_start_seconds": 24,
+          "defaultChoice": "choice_4ef114012e6b451ea43d2a1b8e45113c_2",
+          "choices": [
+            {
+              "key": "choice_4ef114012e6b451ea43d2a1b8e45113c_1",
+              "label": "Respond",
+              "next": "87098d68-a295-48ab-990a-b177eb1fae65",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_4ef114012e6b451ea43d2a1b8e45113c_2",
+              "label": "Quiet",
+              "next": "c6468941-c67a-49bf-9c9a-a0ed4b1e12aa",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "fea15c6e-011c-4f1d-96de-37a645a6c681",
+          "title": "Bring down divine punishment",
+          "video": "Videos/C_ac030e9a_8accceab-c401-42a2-ba81-8c474d6d6db9.mp4",
+          "subtitles": {
+            "zh": "Subtitles/C_ac030e9a_8accceab-c401-42a2-ba81-8c474d6d6db9.zh.srt"
+          },
+          "coverImage": "Thumbnails/C_ac030e9a_8accceab-c401-42a2-ba81-8c474d6d6db9.jpg",
+          "question": "How to punish her?",
+          "duration": 8,
+          "defaultChoice": "-1",
+          "choices": [
+            {
+              "key": "choice_883535108da04d808976e535205715ee_1",
+              "label": "Throw the punch",
+              "next": "bfcc1100-be16-40d3-9000-6f2e6f6798d6",
+              "immediate_settle": true
+            },
+            {
+              "key": "choice_883535108da04d808976e535205715ee_2",
+              "label": "Trip her",
+              "next": "ad53f275-9b02-413c-9998-6513af1931d8",
+              "immediate_settle": true
+            }
+          ]
+        },
+        {
+          "id": "9b22c62f-191b-40e1-bbc1-94d6fef83d6e",
+          "title": "Is this correct?",
+          "video": "Videos/E_80e3e0cf_3f574e8f-8cb3-4637-acd6-c20172f9de37.mp4",
+          "subtitles": {
+            "zh": "Subtitles/E_80e3e0cf_3f574e8f-8cb3-4637-acd6-c20172f9de37.zh.srt"
+          },
+          "coverImage": "Thumbnails/E_80e3e0cf_3f574e8f-8cb3-4637-acd6-c20172f9de37.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "87098d68-a295-48ab-990a-b177eb1fae65",
+          "title": "Tell him!",
+          "video": "Videos/B01--2-_88e9e2a8_807d24b5-5138-4e2e-b377-57c50512638e.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01--2-_88e9e2a8_807d24b5-5138-4e2e-b377-57c50512638e.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01--2-_88e9e2a8_807d24b5-5138-4e2e-b377-57c50512638e.jpg",
+          "next": "fea15c6e-011c-4f1d-96de-37a645a6c681"
+        },
+        {
+          "id": "bfcc1100-be16-40d3-9000-6f2e6f6798d6",
+          "title": "Punch Bowl",
+          "video": "Videos/D01_51d04a93_911d5476-0a68-4af1-8d09-2bd0df316bec.mp4",
+          "subtitles": {
+            "zh": "Subtitles/D01_51d04a93_911d5476-0a68-4af1-8d09-2bd0df316bec.zh.srt"
+          },
+          "coverImage": "Thumbnails/D01_51d04a93_911d5476-0a68-4af1-8d09-2bd0df316bec.jpg",
+          "next": "9b22c62f-191b-40e1-bbc1-94d6fef83d6e"
+        }
+      ]
+    },
+    "9": {
+      "externalId": "b1e03b50-9b75-4ff4-8b0d-b97c84da3abb",
+      "meta": {
+        "description": "",
+        "startNodeId": "146a5c00-a69e-4ee5-871c-4fc44bd31fb9",
+        "title": "EP09"
+      },
+      "nodes": [
+        {
+          "id": "146a5c00-a69e-4ee5-871c-4fc44bd31fb9",
+          "title": "Give them some color see see",
+          "video": "Videos/A_0c4c153f_6406975d-705a-4a18-80b7-f2592c24649d.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_0c4c153f_6406975d-705a-4a18-80b7-f2592c24649d.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_0c4c153f_6406975d-705a-4a18-80b7-f2592c24649d.jpg",
+          "question": "Give them a taste of their own medicine!",
+          "duration": 5,
+          "defaultChoice": "choice_8822cedcf3884a688181a7b09747a27f_1",
+          "choices": [
+            {
+              "key": "choice_8822cedcf3884a688181a7b09747a27f_1",
+              "label": "To use mirror!",
+              "next": "251567fe-2f7d-45cd-81ab-244ee42ed7a5",
+              "immediate_settle": false
+            },
+            {
+              "key": "choice_8822cedcf3884a688181a7b09747a27f_2",
+              "label": "To use window!",
+              "next": "db783155-b6cb-4978-a3c3-186195f78d8e",
+              "immediate_settle": false
+            }
+          ]
+        },
+        {
+          "id": "db783155-b6cb-4978-a3c3-186195f78d8e",
+          "title": "White",
+          "video": "Videos/B02--2-_a91c14d1_2b7f2585-5b24-4f13-962a-0dc496ad81fc.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02--2-_a91c14d1_2b7f2585-5b24-4f13-962a-0dc496ad81fc.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02--2-_a91c14d1_2b7f2585-5b24-4f13-962a-0dc496ad81fc.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "251567fe-2f7d-45cd-81ab-244ee42ed7a5",
+          "title": "Red",
+          "video": "Videos/B01--2-_b5efb934_f059a9ae-e632-46ab-a3a8-e4c87a17e421.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01--2-_b5efb934_f059a9ae-e632-46ab-a3a8-e4c87a17e421.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01--2-_b5efb934_f059a9ae-e632-46ab-a3a8-e4c87a17e421.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        }
+      ]
+    },
+    "10": {
+      "externalId": "7054da4d-42c5-4184-ac7d-d2d2aa2bfe2a",
+      "meta": {
+        "description": "",
+        "startNodeId": "a2fef176-b051-47f2-8fd3-13f72bb06ab6",
+        "title": "EP10"
+      },
+      "nodes": [
+        {
+          "id": "37ac221d-0f42-4955-b1e9-c265f49dd021",
+          "title": "use Magic!",
+          "video": "Videos/B02_2dc9afc1_13028f73-fad0-4a2d-a9b6-87408f347639.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B02_2dc9afc1_13028f73-fad0-4a2d-a9b6-87408f347639.zh.srt"
+          },
+          "coverImage": "Thumbnails/B02_2dc9afc1_13028f73-fad0-4a2d-a9b6-87408f347639.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        },
+        {
+          "id": "a2fef176-b051-47f2-8fd3-13f72bb06ab6",
+          "title": "She is coming...",
+          "video": "Videos/A_4cd5d3ff_9e2ed927-0bbe-4270-b234-f456ae381a77.mp4",
+          "subtitles": {
+            "zh": "Subtitles/A_4cd5d3ff_9e2ed927-0bbe-4270-b234-f456ae381a77.zh.srt"
+          },
+          "coverImage": "Thumbnails/A_4cd5d3ff_9e2ed927-0bbe-4270-b234-f456ae381a77.jpg",
+          "question": "You should...",
+          "duration": 8,
+          "defaultChoice": "choice_5b07e0dc82bb46e9b74c84d962414406_1",
+          "choices": [
+            {
+              "key": "choice_5b07e0dc82bb46e9b74c84d962414406_1",
+              "label": "Hide yourself",
+              "next": "c0c6840d-8f59-46de-a350-6f194ec24106",
+              "immediate_settle": false
+            },
+            {
+              "key": "choice_5b07e0dc82bb46e9b74c84d962414406_2",
+              "label": "Distract her",
+              "next": "37ac221d-0f42-4955-b1e9-c265f49dd021",
+              "immediate_settle": false
+            }
+          ]
+        },
+        {
+          "id": "c0c6840d-8f59-46de-a350-6f194ec24106",
+          "title": "use Hands!",
+          "video": "Videos/B01_0d54fd0f_3059f781-a894-4ef8-beff-38eef5b2d6cc.mp4",
+          "subtitles": {
+            "zh": "Subtitles/B01_0d54fd0f_3059f781-a894-4ef8-beff-38eef5b2d6cc.zh.srt"
+          },
+          "coverImage": "Thumbnails/B01_0d54fd0f_3059f781-a894-4ef8-beff-38eef5b2d6cc.jpg",
+          "end_type": "chapter",
+          "is_end": true
+        }
+      ]
+    }
+  },
+  "subtitles": {
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_be40e051_efd09ae9-a896-42ee-a4c0-9355578ffcb1.zh.srt": "1\n00:00:02,376 --> 00:00:03,896\n我想救她。\n\n2\n00:00:05,544 --> 00:00:07,704\n我没能及时抓住她。\n\n3\n00:00:07,880 --> 00:00:08,664\n是啊，才怪。\n\n4\n00:00:11,784 --> 00:00:12,984\nKigon，求你了。\n\n5\n00:00:14,696 --> 00:00:16,216\n她就这么摔下去，太奇怪了。\n\n6\n00:00:17,384 --> 00:00:21,400\n我该去看看阳台，确认结构有没有问题。\n\n7\n00:00:21,896 --> 00:00:23,696\n你知道她只是滑倒了，仅此而已。\n\n8\n00:00:23,696 --> 00:00:28,088\n但你该跟我们住在悟家，\n至少等Sophie醒来。\n\n9\n00:00:28,456 --> 00:00:30,328\n你可以住老房子里妈妈的房间。\n\n10\n00:00:33,960 --> 00:00:37,400\n我听得到他们，但我什么也做不了。\n\n11\n00:00:38,824 --> 00:00:40,410\n起来啊，身体，求你了。\n\n12\n00:00:40,410 --> 00:00:41,545\n起来！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A--2-_850aa1f4_c26e214a-362b-4008-b56b-055a97827fa7.zh.srt": "1\n00:00:05,448 --> 00:00:07,992\n你根本不配嫁给丹尼尔！\n\n2\n00:00:14,440 --> 00:00:18,064\n在爸爸手下干几年后，\n我会继承拉纳利汽车公司。\n\n3\n00:00:18,064 --> 00:00:19,584\n他想先确认我准备好了。\n\n4\n00:00:19,584 --> 00:00:21,688\n我对汽车和经济早就很在行了。\n\n5\n00:00:22,536 --> 00:00:24,632\n我爸觉得我很快就能接手。\n\n6\n00:00:25,992 --> 00:00:28,312\n听起来你会是苏菲的好丈夫。\n\n7\n00:00:28,488 --> 00:00:30,616\n我得确保我闺蜜被照顾好。\n\n8\n00:00:32,424 --> 00:00:35,384\n我真看不出那个水母小姐凭什么嫁给你。\n\n9\n00:00:35,528 --> 00:00:37,368\n她到底有什么拿得出手的？\n\n10\n00:00:37,864 --> 00:00:39,032\n她心地善良。\n\n11\n00:00:39,464 --> 00:00:40,504\n这才是最重要的。\n\n12\n00:00:51,432 --> 00:00:52,600\n这是我祖母的。\n\n13\n00:00:52,600 --> 00:00:53,464\n我想把它送给你。\n\n14\n00:00:53,768 --> 00:00:57,144\n奶奶以前常说，\n这娃娃会守护家里的女人。\n\n15\n00:00:57,544 --> 00:00:58,584\n谢谢你，丹尼尔。\n\n16\n00:00:58,856 --> 00:01:00,120\n我会好好珍惜它。\n\n17\n00:01:00,296 --> 00:01:02,008\n我去把她放到安全的地方。\n\n18\n00:01:04,072 --> 00:01:06,744\n那个，不好意思，我想去一下洗手间。\n\n19\n00:01:12,328 --> 00:01:13,016\n时候到了。\n\n20\n00:01:23,016 --> 00:01:24,376\n苏菲，过来一下。\n\n21\n00:01:24,520 --> 00:01:25,560\n你想干什么？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01--2-_4dd3ad7c_bafd3456-c5ff-4fee-9c94-aec491a260a3.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C_09ce58b7_af8422ff-a5da-4b8b-a0f9-2cfb3702adab.zh.srt": "1\n00:00:00,680 --> 00:00:03,288\n你就是个贪财的坏女人，我看穿你了。\n\n2\n00:00:03,560 --> 00:00:05,016\n不，我不是。\n\n3\n00:00:06,184 --> 00:00:09,592\n你根本不配嫁给丹尼尔！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02--2-_b583e695_99e36751-af71-45c3-a6c5-bed4a91042ad.zh.srt": "1\n00:00:16,040 --> 00:00:17,144\n我可能要醒了。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02_c3e9b4c1_fc061bde-cade-4a20-a18c-6528457f88f7.zh.srt": "1\n00:00:01,032 --> 00:00:02,648\n好吧，我想这一定很重要。\n\n2\n00:00:03,912 --> 00:00:05,144\n明智的选择。\n\n3\n00:00:07,368 --> 00:00:08,888\n你想告诉我什么？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01_df548aff_039cffce-a4ff-46e4-b424-ee8ff26445ba.zh.srt": "1\n00:00:00,040 --> 00:00:00,832\n我凭什么？\n\n2\n00:00:00,832 --> 00:00:03,064\n你总是对我又凶又刻薄。\n\n3\n00:00:03,880 --> 00:00:06,232\n有件关于丹尼尔的重要事给你看。\n\n4\n00:00:12,648 --> 00:00:14,200\n你到底想告诉我什么？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C_854dbc07_c2aae9f3-945b-4458-a7fe-0c3fdb91446b.zh.srt": "1\n00:00:03,176 --> 00:00:03,861\n我做到了。\n\n2\n00:00:03,861 --> 00:00:05,464\n是我自己醒来的。\n\n3\n00:00:05,928 --> 00:00:08,184\n等等，不对劲。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_d0b86a81_ddaa580e-b1fa-4c57-9bd9-b9112effe188.zh.srt": "1\n00:00:00,680 --> 00:00:02,520\n我不能让丹尼尔看到我这样。\n\n2\n00:00:03,272 --> 00:00:06,008\n要是丹尼尔看见，婚礼就完了。\n\n3\n00:00:17,544 --> 00:00:18,936\n我想去看看阳台。\n\n4\n00:00:19,336 --> 00:00:21,368\n我想知道苏菲为何会坠落。\n\n5\n00:00:22,344 --> 00:00:26,200\n也许我该用灵视，就像奶奶常说的。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/D02--2-_50b752a2_9ff2d86e-4aeb-48d1-88bc-e93595a62ebe.zh.srt": "1\n00:00:00,264 --> 00:00:02,008\n那株植物。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01--2-_aa17ee3f_239f2a54-484a-4c88-b65c-73834e097bcb.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/D01--2-_db8d407d_9d8f5c82-f6de-40e8-9246-5133fe13352b.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01--2-_636260e1_2903c9d1-4c06-4cb2-b11f-0a442ca850a5.zh.srt": "1\n00:00:00,488 --> 00:00:02,744\n不，还没那么严重。\n\n2\n00:00:02,920 --> 00:00:05,560\n我还是老派点，靠脑子吧。\n\n3\n00:00:08,136 --> 00:00:08,920\n她不戴穿戴甲。\n\n4\n00:00:09,800 --> 00:00:15,960\n姐妹会里只有三个人做美甲：\n贾露、萨曼莎和露西。\n\n5\n00:00:16,104 --> 00:00:17,503\n丹尼尔，你在这儿干吗？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C_d6ffd0c9_f69b5fd5-0a26-48f1-97ad-d268ffe67498.zh.srt": "1\n00:00:00,968 --> 00:00:02,904\n你昨晚戴绿色穿戴甲了吗？\n\n2\n00:00:05,288 --> 00:00:06,360\n呃，没有。\n\n3\n00:00:06,504 --> 00:00:07,128\n为什么？\n\n4\n00:00:08,168 --> 00:00:09,976\n我感觉她在骗我。\n\n5\n00:00:10,472 --> 00:00:11,864\n没什么。\n\n6\n00:00:12,680 --> 00:00:14,648\n我觉得你是在自己吓自己。\n\n7\n00:00:15,912 --> 00:00:18,648\n来，我帮你转移一下注意力。\n\n8\n00:00:19,144 --> 00:00:21,464\n求你了，丹尼尔，别亲她。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C_c05aaf2e_50dd61c3-98f9-40aa-8f1d-5e1946dcb3cc.zh.srt": "1\n00:00:02,152 --> 00:00:03,928\n为什么大家都在苏菲房间？\n\n2\n00:00:05,448 --> 00:00:06,840\n出怪事了。\n\n3\n00:00:07,336 --> 00:00:09,112\n我想一个人待一会儿。\n\n4\n00:00:11,560 --> 00:00:12,600\n你对他做了什么吗？\n\n5\n00:00:14,248 --> 00:00:15,000\n没有啊？\n\n6\n00:00:18,248 --> 00:00:19,973\n你想把他抢走，对吧？\n\n7\n00:00:19,973 --> 00:00:21,548\n你真恶心！\n\n8\n00:00:21,548 --> 00:00:22,573\n闭嘴！\n\n9\n00:00:22,573 --> 00:00:25,396\n不行，我不能让她伤害凯莱布。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02--2-_4aee14db_f52f5aa6-6304-4af6-8eaa-15292537e897.zh.srt": "1\n00:00:00,264 --> 00:00:02,616\n第二视界，指引我。\n\n2\n00:00:03,240 --> 00:00:05,432\n苏菲坠落一事，我漏了什么？\n\n3\n00:00:08,584 --> 00:00:13,379\n所以若不是他戴的甲片，就只剩\n\n4\n00:00:13,379 --> 00:00:17,112\n姐妹会里三个人：贾露、萨曼莎和露西。\n\n5\n00:00:17,640 --> 00:00:19,320\n丹尼尔，你在这儿做什么？\n\n6\n00:00:19,912 --> 00:00:21,897\n你昨晚戴了绿色甲片吗？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/v2_25936ee6_33c2e978-15cc-4cc8-9e6a-0256b6ce42b9.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/1_ebb3a734_76304a62-ea5c-47d0-a3f0-288c420c3224.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/4-v2_27436a23_74d6248b-02a8-4ed9-a999-713ae3a49171.zh.srt": "1\n00:00:00,296 --> 00:00:01,850\n我最好保密。\n\n2\n00:00:01,850 --> 00:00:06,488\n我得趁她没发现，偷偷溜回床上。\n\n3\n00:00:07,784 --> 00:00:08,372\n啊？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02--2-_9e1fddeb_d678a16c-cdd6-457b-9b3e-e8b462c059c9.zh.srt": "1\n00:00:01,608 --> 00:00:02,840\n是，露西。\n\n2\n00:00:08,136 --> 00:00:08,952\n好姑娘。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/1-1_a78a6561_31655d9c-9cc7-43c5-bc25-3e0f4e31c1f9.zh.srt": "1\n00:00:00,936 --> 00:00:03,352\n我偷偷绕过他们去救她！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_775cba42_2bfc2155-cc5e-41ae-b887-676e74c6118f.zh.srt": "1\n00:00:01,032 --> 00:00:03,704\n那个娃娃怎么会在这儿？\n\n2\n00:00:05,032 --> 00:00:07,896\n我从这娃娃身上感到很强的灵气。\n\n3\n00:00:09,768 --> 00:00:12,216\n也许只是因为它很旧，又是我奶奶的。\n\n4\n00:00:14,248 --> 00:00:17,752\n我能感觉丹尼尔有些不同，可为什么？\n\n5\n00:00:20,520 --> 00:00:22,270\n真不敢相信我竟然顶撞了露西。\n\n6\n00:00:22,270 --> 00:00:24,376\n我以前一直都那么胆小怕事。\n\n7\n00:00:24,552 --> 00:00:25,304\n苏菲！\n\n8\n00:00:25,512 --> 00:00:28,568\n苏菲，你能帮我拿点咖啡吗？\n\n9\n00:00:33,288 --> 00:00:34,207\n马上来。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/v2-1_a7dc1247_234c04e4-60ea-4bac-bd67-aa45528edac3.zh.srt": "1\n00:00:02,696 --> 00:00:03,352\n怎么会？\n\n2\n00:00:04,168 --> 00:00:04,984\n随便吧。\n\n3\n00:00:05,448 --> 00:00:10,168\n我得帮忙筹备明晚本特利家的派对。\n\n4\n00:00:10,568 --> 00:00:13,016\n本特利办派对，听着就无聊透顶。\n\n5\n00:00:14,248 --> 00:00:15,928\n你就是气他甩了你。\n\n6\n00:00:16,904 --> 00:00:18,296\n是我甩了他。\n\n7\n00:00:18,472 --> 00:00:20,079\n你就继续这么骗自己吧。\n\n8\n00:00:20,079 --> 00:00:21,904\n你忘了他劈腿我吗？\n\n9\n00:00:21,904 --> 00:00:23,979\n还偷光了我所有积蓄。\n\n10\n00:00:23,979 --> 00:00:26,489\n我19岁就因他破产了。\n\n11\n00:00:26,489 --> 00:00:28,120\n他劈腿我都没法怪他。\n\n12\n00:00:28,936 --> 00:00:30,626\n他本来就能找到比你好太多的人。\n\n13\n00:00:30,626 --> 00:00:32,216\n混蛋！\n\n14\n00:00:34,888 --> 00:00:36,408\n这怎么掉下来的？\n\n15\n00:00:37,384 --> 00:00:39,512\n我要告诉她我被困在一个玩偶里吗？\n\n16\n00:00:39,720 --> 00:00:42,584\n基奥格林是我最好的朋友。\n\n17\n00:00:42,792 --> 00:00:44,297\n她就像我亲姐妹一样。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/3-1--2-_85c41d1e_f604b2bc-fa2a-4647-869e-5c4142448791.zh.srt": "1\n00:00:00,008 --> 00:00:00,920\n恰格林？\n\n2\n00:00:01,384 --> 00:00:04,792\n恰格林，我在这边沙发上。\n\n3\n00:00:05,096 --> 00:00:08,031\n我，是我。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02_451b51b3_d26019f2-4e2e-401a-9f6b-61f6c1c6f065.zh.srt": "1\n00:00:12,360 --> 00:00:13,820\n我的力量多么强大！\n\n2\n00:00:13,820 --> 00:00:14,623\n你还好吗？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_aae17e9b_33ddb477-11cd-4814-be6c-eb93d04faee1.zh.srt": "1\n00:00:04,616 --> 00:00:07,224\n我做女巫够久了，知道怎么对付你。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/2-v2_7c22d5c4_db66832c-2ae5-4c28-beb5-bf567a183a17.zh.srt": "1\n00:00:00,264 --> 00:00:04,440\n如果我之前能用意念，\n我就还能再用一次！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01_dadd0660_a219ab5d-4691-42d7-80ec-c01e93f73ba0.zh.srt": "1\n00:00:01,608 --> 00:00:02,264\n竟然做到这一步。\n\n2\n00:00:06,408 --> 00:00:07,480\n凯特琳，是我！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/1--2-_1102cda9_5300cee8-d687-4f68-a08d-40a38a38097e.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/3-1_4238ec1e_1bd802c7-4b5f-4112-a5f1-dd65fc819d30.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C--2-_0d39d050_7d1781e0-6c9e-4393-bc66-15e4ceaee43f.zh.srt": "1\n00:00:00,232 --> 00:00:01,400\n苏菲？\n\n2\n00:00:01,800 --> 00:00:03,192\n我被困在这个娃娃里了。\n\n3\n00:00:03,880 --> 00:00:06,744\n我完全不知道那是你。\n\n4\n00:00:06,744 --> 00:00:08,069\n怎么会这样？\n\n5\n00:00:08,069 --> 00:00:09,044\n我不知道。\n\n6\n00:00:09,044 --> 00:00:12,844\n我昏迷时一直想醒来，\n然后就进了这个娃娃里。\n\n7\n00:00:12,844 --> 00:00:14,569\n像《辣妈辣妹》遇上《鬼娃》。\n\n8\n00:00:14,569 --> 00:00:17,519\n我得回到自己身体里，\n才能和丹尼尔结婚。\n\n9\n00:00:17,519 --> 00:00:18,794\n基格勒，你愿意帮我吗？\n\n10\n00:00:18,794 --> 00:00:20,269\n为什么不告诉丹尼尔真相？\n\n11\n00:00:20,269 --> 00:00:20,819\n不！\n\n12\n00:00:20,819 --> 00:00:22,419\n他会取消婚礼的！\n\n13\n00:00:22,419 --> 00:00:24,802\n我都看见你有多害怕了！\n\n14\n00:00:24,802 --> 00:00:27,608\n回到我身体里？\n\n15\n00:00:28,136 --> 00:00:29,400\n你是我最好的朋友。\n\n16\n00:00:29,512 --> 00:00:31,064\n我愿意为你发动政变。\n\n17\n00:00:31,176 --> 00:00:32,209\n谢谢你，卡格林。\n\n18\n00:00:32,209 --> 00:00:33,112\n你最好了！\n\n19\n00:00:34,376 --> 00:00:35,992\n我们要怎么把我变回去？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/v2-1_a41a1e88_d5807643-b38b-4b21-9ec5-29e2baa8aff2.zh.srt": "1\n00:00:01,256 --> 00:00:02,552\n没人发现我们。\n\n2\n00:00:06,024 --> 00:00:07,480\n先让我拿点零食。\n\n3\n00:00:09,096 --> 00:00:12,280\nKjeglin，\n你怎么把苏菲的娃娃带来派对？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/4-v2-1--2-_f5bd2b09_a4042f6b-c00f-498f-add0-45d37ba08b48.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/D02_08f10dfa_ad8e5c16-b594-44c5-a3e5-aed3159aa281.zh.srt": "1\n00:00:00,104 --> 00:00:03,000\n我要是朝她扔过去，不会让她起疑吗？\n\n2\n00:00:03,000 --> 00:00:04,696\n我该怎么办？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/2--2-_0552f4b9_d803439e-d7ab-48c5-b82e-e52fdcb68204.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/v2-1_fd7d7715_aa60768d-aac2-4601-af3c-127c24610db7.zh.srt": "1\n00:00:00,000 --> 00:00:01,400\n别担心，交给我。\n\n2\n00:00:03,048 --> 00:00:04,773\n我们得闯进我前任家。\n\n3\n00:00:04,773 --> 00:00:08,280\n他偷了我很多东西，\n连巫术用品也拿走了。\n\n4\n00:00:08,968 --> 00:00:11,768\n幸好我现在有个女巫朋友。\n\n5\n00:00:12,168 --> 00:00:13,720\n他明天要办派对。\n\n6\n00:00:13,928 --> 00:00:15,736\n正是下手的好时机。\n\n7\n00:00:17,064 --> 00:00:20,568\n我知道一定会的！\n\n8\n00:00:25,672 --> 00:00:26,552\n我们该怎么办？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/C_ac030e9a_8accceab-c401-42a2-ba81-8c474d6d6db9.zh.srt": "1\n00:00:00,072 --> 00:00:00,971\n马上来！\n\n2\n00:00:00,971 --> 00:00:03,672\n我不在时，请照看娃娃。\n\n3\n00:00:06,248 --> 00:00:07,768\n丹尼尔知道吗？\n\n4\n00:00:08,904 --> 00:00:10,713\n你最好赶紧上楼。\n\n5\n00:00:10,713 --> 00:00:14,392\n我的巫术用品应该在本特利房里。\n\n6\n00:00:21,608 --> 00:00:23,360\n我从这儿能看见整个房间。\n\n7\n00:00:23,360 --> 00:00:25,054\n他们正直奔基格林而去。\n\n8\n00:00:25,054 --> 00:00:28,208\n本特利和露西会告诉他，她不该在这儿。\n\n9\n00:00:28,208 --> 00:00:30,836\n要是我能拿东西砸他们就好了！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02--2-_ce67b9aa_b275ccc0-0c42-439f-9175-4030fabd1d04.zh.srt": "1\n00:00:00,680 --> 00:00:02,744\n我能感觉到他在试着联系我。\n\n2\n00:00:03,016 --> 00:00:04,152\n怎么回事？\n\n3\n00:00:06,344 --> 00:00:07,894\n丹尼尔会不会有通灵能力？\n\n4\n00:00:07,894 --> 00:00:10,419\n我觉得现在暴露自己还不安全。\n\n5\n00:00:10,419 --> 00:00:11,992\n我还是保持安静吧。\n\n6\n00:00:12,232 --> 00:00:12,856\n没什么。\n\n7\n00:00:14,312 --> 00:00:16,436\n丹尼尔，请过来一下。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/1_ff5f9b1e_655aee5c-c4a2-46a6-b0e9-fe1bd21412d5.zh.srt": "1\n00:00:00,136 --> 00:00:02,050\n我知道这对苏菲有多重要。\n\n2\n00:00:02,050 --> 00:00:04,312\n我想等她醒来再妥善保管。\n\n3\n00:00:06,408 --> 00:00:07,800\n我感觉空气中有些不对劲。\n\n4\n00:00:11,944 --> 00:00:13,016\n她刚才不是在椅子上吗？\n\n5\n00:00:13,288 --> 00:00:14,328\n他看见了！\n\n6\n00:00:14,536 --> 00:00:17,140\n他会发现我是个活娃娃！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A--2-_cde98673_117d2f1f-c666-482d-b37e-0d1bcd469d22.zh.srt": "1\n00:00:01,064 --> 00:00:03,544\n哦，你搞错了。\n\n2\n00:00:03,720 --> 00:00:06,079\n我还能从这个娃娃上感到灵力。\n\n3\n00:00:06,079 --> 00:00:10,104\n若卡格林在护着这娃娃，\n它一定和苏菲有关。\n\n4\n00:00:10,504 --> 00:00:12,679\n是啊，挺好笑的。\n\n5\n00:00:12,679 --> 00:00:18,968\n以前我不太在意这娃娃，\n如今它成了我和苏菲爱情的象征。\n\n6\n00:00:19,272 --> 00:00:21,400\n现在它是我最珍爱的东西之一。\n\n7\n00:00:21,672 --> 00:00:23,480\n你知道吗，我祖母一定会喜欢她。\n\n8\n00:00:23,752 --> 00:00:25,848\n丹尼尔真的很爱我。\n\n9\n00:00:26,088 --> 00:00:27,730\n我来试试灵能波。\n\n10\n00:00:27,730 --> 00:00:29,620\n有时灵体会对此起反应。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01--2-_b5efb934_f059a9ae-e632-46ab-a3a8-e4c87a17e421.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/D01_51d04a93_911d5476-0a68-4af1-8d09-2bd0df316bec.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02--2-_a91c14d1_2b7f2585-5b24-4f13-962a-0dc496ad81fc.zh.srt": "",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_0c4c153f_6406975d-705a-4a18-80b7-f2592c24649d.zh.srt": "1\n00:00:06,120 --> 00:00:09,272\n我前任有些衣服在楼上，你可以换上。\n\n2\n00:00:15,208 --> 00:00:18,108\n糟了，这是本特利的房间。\n\n3\n00:00:18,108 --> 00:00:20,312\n我不能让他们看见我。\n\n4\n00:00:20,584 --> 00:00:21,112\n哎哟！\n\n5\n00:00:23,528 --> 00:00:27,256\n我觉得我待得越久，娃娃身体越像人。\n\n6\n00:00:27,720 --> 00:00:29,656\n那是不是说我会永远被困住？\n\n7\n00:00:37,672 --> 00:00:41,022\n这是基格兰的巫术用品，还有她的魔典。\n\n8\n00:00:41,022 --> 00:00:42,872\n他们肯定把它塞进衣柜了。\n\n9\n00:00:42,872 --> 00:00:45,048\n我得把这些还给她。\n\n10\n00:00:46,184 --> 00:00:48,248\n真恶心，她就穿这个？\n\n11\n00:00:48,456 --> 00:00:50,322\n她穿得像个流浪汉。\n\n12\n00:00:50,322 --> 00:00:52,952\n真不敢信你跟那贱货交往过。\n\n13\n00:00:53,704 --> 00:00:59,032\n年轻气盛嘛，大家都这么说。\n\n14\n00:01:02,408 --> 00:01:04,984\n那些混蛋竟敢那样羞辱凯特琳。\n\n15\n00:01:05,768 --> 00:01:09,592\n他们气得我简直想要……\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B02_2dc9afc1_13028f73-fad0-4a2d-a9b6-87408f347639.zh.srt": "1\n00:00:02,920 --> 00:00:04,536\n也许那会给她一个暗示。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/E_80e3e0cf_3f574e8f-8cb3-4637-acd6-c20172f9de37.zh.srt": "1\n00:00:00,520 --> 00:00:01,304\n好。\n\n2\n00:00:02,280 --> 00:00:06,382\n我不知道能不能忍受看丹尼尔照顾露西。\n\n3\n00:00:06,382 --> 00:00:07,960\n我是不是把事情弄得更糟了？\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01--2-_88e9e2a8_807d24b5-5138-4e2e-b377-57c50512638e.zh.srt": "1\n00:00:00,520 --> 00:00:04,080\n我不懂怎么回事，但他在试着跟我说话。\n\n2\n00:00:04,080 --> 00:00:05,050\n我……我能感觉到。\n\n3\n00:00:05,050 --> 00:00:06,264\n丹尼尔，我在这儿。\n\n4\n00:00:06,664 --> 00:00:09,144\n我不知道怎么回应他。\n\n5\n00:00:10,600 --> 00:00:11,576\n没什么。\n\n6\n00:00:12,744 --> 00:00:14,900\n丹尼尔，请过来一下。\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/A_4cd5d3ff_9e2ed927-0bbe-4270-b234-f456ae381a77.zh.srt": "1\n00:00:09,000 --> 00:00:09,624\n怎么了？\n\n2\n00:00:15,144 --> 00:00:15,928\n不见了。\n\n3\n00:00:17,768 --> 00:00:18,456\n什么不见了？\n\n4\n00:00:18,568 --> 00:00:19,312\n刚才有人来过，Bentley。\n\n5\n00:00:19,312 --> 00:00:20,056\n他们想吓唬我。\n\n6\n00:00:20,392 --> 00:00:23,160\n多半只是恶作剧。\n\n7\n00:00:23,368 --> 00:00:25,464\n我妹妹最爱干这种事。\n\n8\n00:00:25,768 --> 00:00:27,032\n你得冷静点。\n\n9\n00:00:27,368 --> 00:00:29,176\n我给你订条新裙子，怎么样？\n\n10\n00:00:29,640 --> 00:00:31,668\n肯定二十分钟内就能送到。\n\n11\n00:00:31,668 --> 00:00:33,944\nBentley，这里有人。\n\n12\n00:00:34,088 --> 00:00:37,080\n不是我妹妹，就是派对上有人开玩笑。\n\n13\n00:00:39,144 --> 00:00:40,120\n也许你说得对。\n\n14\n00:00:40,680 --> 00:00:42,015\n好吧，是个玩笑。\n\n15\n00:00:42,015 --> 00:00:43,184\n全都是个玩笑。\n\n16\n00:00:43,184 --> 00:00:45,592\n你最近对什么都疑神疑鬼。\n\n17\n00:00:46,120 --> 00:00:48,152\n连Daniel的生意你也这样。\n\n18\n00:00:48,520 --> 00:00:50,232\nDaniel的生意？\n\n19\n00:00:50,376 --> 00:00:53,304\n因为要是被抓到，我们会失去一切。\n\n20\n00:00:54,376 --> 00:00:57,624\n拜托，挪用公款只是小儿科。\n\n21\n00:00:57,896 --> 00:01:02,200\n我们只要弄几个假员工，没人会发现。\n\n22\n00:01:02,696 --> 00:01:06,616\n再把工资转到我的秘密账户，\n谁都不会知道。\n\n23\n00:01:07,016 --> 00:01:10,392\n等你嫁给他，他看起来也一样有罪。\n\n24\n00:01:17,480 --> 00:01:18,136\n会被人听见的。\n\n25\n00:01:19,016 --> 00:01:20,504\n这里根本没人！\n",
+    "https://drneqli4lopih.cloudfront.net/publish/workflows/qte/900a3d4e-6589-4c66-8287-d9bd06937c11/publish/v19/Subtitles/B01_0d54fd0f_3059f781-a894-4ef8-beff-38eef5b2d6cc.zh.srt": ""
+  }
+}

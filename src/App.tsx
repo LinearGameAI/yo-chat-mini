@@ -1,0 +1,45 @@
+import { useEffect, useState } from 'react';
+import type { Bootstrap, WatchState } from '../shared/types';
+import { api, setCsrf } from './lib/api';
+import { loginTikTok } from './platform/tiktok';
+import { Player } from './components/Player';
+import { Chat } from './components/Chat';
+import { DramaDetail } from './components/DramaDetail';
+
+function route() { return window.location.hash.slice(1) || 'home'; }
+function go(to: string) { window.location.hash = to; }
+export default function App() {
+  const [data, setData] = useState<Bootstrap>(); const [error, setError] = useState(''); const [page, setPage] = useState(route); const [retry, setRetry] = useState(0);
+  const [selectedCharacter, setSelectedCharacter] = useState<string>();
+  const params = new URLSearchParams(window.location.search);
+  useEffect(() => {
+    const listener = () => setPage(route()); window.addEventListener('hashchange', listener); return () => window.removeEventListener('hashchange', listener);
+  }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        let result = await api<Bootstrap>('/bootstrap', undefined, controller.signal);
+        if (result.mode === 'tiktok' && !result.authenticated) { await loginTikTok(); result = await api<Bootstrap>('/bootstrap', undefined, controller.signal); }
+        setCsrf(result.csrf);
+        if (params.get('drama_id') && params.get('drama_id') !== result.catalog.id) throw new Error('This preview only contains The Spooky Doll’s Revenge.');
+        const episodeId = params.get('episode_id');
+        if (episodeId && !window.sessionStorage.getItem(`entry:${window.location.search}`)) {
+          result.watch = await api('/watch/select', { episodeId }); window.sessionStorage.setItem(`entry:${window.location.search}`, '1');
+          if (!window.location.hash) go(params.get('character_id') ? 'chat' : 'watch');
+        } else if (params.get('character_id') && !window.location.hash) go('chat');
+        if (!controller.signal.aborted) setData(result);
+      } catch (e) { if (!controller.signal.aborted) setError((e as Error).message); }
+    })(); return () => controller.abort();
+  }, [retry]);
+  const updateWatch = (w: WatchState) => setData(d => d ? { ...d, watch: w } : d);
+  async function refreshAndGo(to: string) {
+    try { const fresh = await api<Bootstrap>('/bootstrap'); setCsrf(fresh.csrf); setData(fresh); go(to); } catch (e) { setError((e as Error).message); }
+  }
+  if (!data) return <div className="app-shell"><main className="loading-page">{error ? <><h1>Unable to open this story</h1><p role="alert">{error}</p><button className="primary" onClick={() => { setError(''); setRetry(n => n + 1); }}>Try again</button></> : <><div className="spinner" /><p role="status">Opening the story…</p></>}</main></div>;
+  return <div className="app-shell">
+    {page === 'watch' ? <Player key={data.watch.playbackId} data={data} onWatch={updateWatch} onChat={() => void refreshAndGo('chat')} onHome={() => void refreshAndGo('home')} />
+      : page === 'chat' ? <Chat data={data} initialCharacter={selectedCharacter ?? params.get('character_id') ?? undefined} onBack={() => void refreshAndGo('watch')} />
+      : <DramaDetail data={data} onWatch={updateWatch} onPlay={() => go('watch')} onChat={id => { setSelectedCharacter(id); go('chat'); }} />}
+  </div>;
+}

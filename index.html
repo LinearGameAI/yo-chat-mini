@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script async src="https://connect.tiktok-minis.com/drama/sdk.js" onload="window.dispatchEvent(new Event('minis-sdk-ready'))"></script>
+    <script>
+      // The public Client Key is injected at build/dev time. Local mode does not authenticate.
+      window.__MINI_CLIENT_KEY__ = "local-preview-only";
+      function initializeMinis() {
+        if (window.__MINI_CLIENT_KEY__ && !window.__MINI_CLIENT_KEY__.startsWith('local-') && window.TTMinis) {
+          TTMinis.init({ clientKey: "local-preview-only" });
+          window.__MINI_SDK_INITIALIZED__ = true;
+        }
+      }
+      window.addEventListener('minis-sdk-ready', initializeMinis);
+      initializeMinis();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0B0B0D" />
+    <title>The Spooky Doll’s Revenge — yo-chat-mini</title>
+  </head>
+  <body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
+</html>

@@ -1,0 +1,202 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "archiver": {
+      "name": "archiver",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "archiver-utils",
+        "readdir-glob",
+        "zip-stream"
+      ],
+      "effects": [],
+      "range": ">=5.0.0",
+      "nodes": [
+        "node_modules/archiver"
+      ],
+      "fixAvailable": true
+    },
+    "archiver-utils": {
+      "name": "archiver-utils",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "glob"
+      ],
+      "effects": [
+        "archiver",
+        "zip-stream"
+      ],
+      "range": ">=5.0.1",
+      "nodes": [
+        "node_modules/archiver-utils"
+      ],
+      "fixAvailable": true
+    },
+    "glob": {
+      "name": "glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109843,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "glob CLI: Command injection via -c/--cmd executes matches with shell:true",
+          "url": "https://github.com/advisories/GHSA-5j98-mcp5-4vw2",
+          "severity": "high",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=11.0.0 <11.1.0"
+        },
+        {
+          "source": 1244013,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+          "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=9.0.0 <=14.0.1"
+        },
+        "minimatch"
+      ],
+      "effects": [
+        "archiver-utils",
+        "tiktok-minis-cli",
+        "ttmg-pack"
+      ],
+      "range": "3.0.0 - 14.0.1",
+      "nodes": [
+        "node_modules/archiver-utils/node_modules/glob",
+        "node_modules/glob",
+        "node_modules/ttmg-pack/node_modules/glob"
+      ],
+      "fixAvailable": false
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1244012,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<11.0.1"
+        }
+      ],
+      "effects": [
+        "glob",
+        "readdir-glob"
+      ],
+      "range": "<11.0.1",
+      "nodes": [
+        "node_modules/archiver-utils/node_modules/minimatch",
+        "node_modules/minimatch",
+        "node_modules/readdir-glob/node_modules/minimatch"
+      ],
+      "fixAvailable": false
+    },
+    "readdir-glob": {
+      "name": "readdir-glob",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "minimatch"
+      ],
+      "effects": [
+        "archiver"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/readdir-glob"
+      ],
+      "fixAvailable": true
+    },
+    "tiktok-minis-cli": {
+      "name": "tiktok-minis-cli",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "archiver",
+        "glob",
+        "ttmg-pack"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/tiktok-minis-cli"
+      ],
+      "fixAvailable": false
+    },
+    "ttmg-pack": {
+      "name": "ttmg-pack",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "glob"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/ttmg-pack"
+      ],
+      "fixAvailable": true
+    },
+    "zip-stream": {
+      "name": "zip-stream",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "archiver-utils"
+      ],
+      "effects": [],
+      "range": "6.0.0 - 6.0.1",
+      "nodes": [
+        "node_modules/zip-stream"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 5,
+      "high": 3,
+      "critical": 0,
+      "total": 8
+    },
+    "dependencies": {
+      "prod": 70,
+      "dev": 564,
+      "optional": 134,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 633
+    }
+  }
+}
