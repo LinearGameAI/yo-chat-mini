@@ -18,9 +18,10 @@ export default function App() {
   useEffect(() => {
     const controller = new AbortController();
     void (async () => {
+      let stage = 'bootstrap';
       try {
         let result = await api<Bootstrap>('/bootstrap', undefined, controller.signal);
-        if (result.mode === 'tiktok' && !result.authenticated) { await loginTikTok(); result = await api<Bootstrap>('/bootstrap', undefined, controller.signal); }
+        if (result.mode === 'tiktok' && !result.authenticated) { stage = 'TikTok login'; await loginTikTok(); stage = 'bootstrap after TikTok login'; result = await api<Bootstrap>('/bootstrap', undefined, controller.signal); }
         setCsrf(result.csrf);
         if (params.get('drama_id') && params.get('drama_id') !== result.catalog.id) throw new Error('This preview only contains The Spooky Doll’s Revenge.');
         const episodeId = params.get('episode_id');
@@ -29,7 +30,12 @@ export default function App() {
           if (!window.location.hash) go(params.get('character_id') ? 'chat' : 'watch');
         } else if (params.get('character_id') && !window.location.hash) go('chat');
         if (!controller.signal.aborted) setData(result);
-      } catch (e) { if (!controller.signal.aborted) setError((e as Error).message); }
+      } catch (e) {
+        if (!controller.signal.aborted) {
+          console.error('[yo-chat-mini] App startup failed', { stage, apiBase: import.meta.env.VITE_API_BASE_URL || '(same origin)', pageOrigin: window.location.origin, error: e });
+          setError((e as Error).message);
+        }
+      }
     })(); return () => controller.abort();
   }, [retry]);
   const updateWatch = (w: WatchState) => setData(d => d ? { ...d, watch: w } : d);

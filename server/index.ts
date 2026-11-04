@@ -21,7 +21,10 @@ for (const host of [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL, proce
 }
 app.use('/api', (req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && !allowedOrigins.has(origin)) { res.status(403).json({ error: 'This application origin is not allowed.' }); return; }
+  // TikTok Minis use per-preview HTTPS origins under tiktok-minis.us. Reflect
+  // only those trusted platform origins (never use '*' with credentialed API calls).
+  const isTikTokMiniOrigin = !!origin && /^https:\/\/[a-z0-9-]+\.tiktok-minis\.us$/i.test(origin);
+  if (origin && !allowedOrigins.has(origin) && !isTikTokMiniOrigin) { res.status(403).json({ error: 'This application origin is not allowed.' }); return; }
   if (origin) { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Access-Control-Allow-Credentials', 'true'); res.vary('Origin'); }
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token'); res.sendStatus(204); return; }
   next();

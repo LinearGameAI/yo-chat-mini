@@ -4,7 +4,7 @@ export interface VeInstance { player?: PlayerKernel; on(event: string, cb: (data
 export interface VeConstructor { new(options: Record<string, unknown>): VeInstance; Events: Record<string, string> }
 interface MinisSDK {
   init(options: { clientKey: string }): void;
-  login(options: { success(result: { code?: string; authResponse?: { code?: string } }): void; fail(error: unknown): void }): void;
+  login(callback: (result: { code?: string; authResponse?: { code?: string }; error?: { error_code?: number; error_msg?: string; [key: string]: unknown } }) => void): void;
   on(event: 'minis.hide' | 'minis.show', cb: () => void): string;
   off(event: string, callbackId: string): void;
   getPlayer(channel?: 'byteplus' | 'volcengine'): Promise<VeConstructor>;
@@ -20,9 +20,21 @@ export async function loginTikTok() {
   const sdk = window.TTMinis;
   if (!sdk || !window.__MINI_CLIENT_KEY__) throw new Error('Configure the TikTok Client Key and open this app through Minis Playground or TikTok.');
   const code = await new Promise<string>((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('TikTok login timed out. Check the test account and debug connection.')), 12000);
-    sdk.login({ success: result => { clearTimeout(timeout); const value = result.code ?? result.authResponse?.code; value ? resolve(value) : reject(new Error('TikTok did not return a login code.')); },
-      fail: () => { clearTimeout(timeout); reject(new Error('TikTok login was not verified.')); } });
+    const timeout = setTimeout(() => reject(new Error('TikTok login timed out without an SDK callback. Check the test account, app login configuration, and debug connection.')), 12000);
+    sdk.login(result => {
+      clearTimeout(timeout);
+      if (result?.error) {
+        console.error('[yo-chat-mini] TikTok login callback failed', { errorCode: result.error.error_code, errorMessage: result.error.error_msg });
+        reject(new Error(result.error.error_msg || `TikTok login failed (${result.error.error_code ?? 'unknown error'}).`));
+        return;
+      }
+      const value = result?.code ?? result?.authResponse?.code;
+      if (value) resolve(value);
+      else {
+        console.error('[yo-chat-mini] TikTok login callback returned no code', { hasResult: !!result });
+        reject(new Error('TikTok did not return a login code.'));
+      }
+    });
   });
   await api('/auth/tiktok', { code });
 }
