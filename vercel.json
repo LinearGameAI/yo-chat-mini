@@ -9,6 +9,9 @@
     "api/index.ts": {
       "maxDuration": 120,
       "includeFiles": "fixtures/spooky-doll.json"
+    },
+    "server/index.ts": {
+      "includeFiles": "config/*.json"
     }
   },
   "rewrites": [
