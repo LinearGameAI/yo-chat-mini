@@ -18,7 +18,10 @@ app.disable('x-powered-by'); app.use(express.json({ limit: '20kb' }));
 const allowedOrigins = new Set((process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173').split(',').map(v => v.trim()).filter(Boolean));
 app.use('/api', (req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && !allowedOrigins.has(origin)) { res.status(403).json({ error: 'This application origin is not allowed.' }); return; }
+  // TikTok Minis use per-preview HTTPS origins under tiktok-minis.us. Reflect
+  // only those trusted platform origins (never use '*' with credentialed API calls).
+  const isTikTokMiniOrigin = !!origin && /^https:\/\/[a-z0-9-]+\.tiktok-minis\.us$/i.test(origin);
+  if (origin && !allowedOrigins.has(origin) && !isTikTokMiniOrigin) { res.status(403).json({ error: 'This application origin is not allowed.' }); return; }
   if (origin) { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Access-Control-Allow-Credentials', 'true'); res.vary('Origin'); }
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token'); res.sendStatus(204); return; }
   next();
