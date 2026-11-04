@@ -19,7 +19,13 @@ test('direct concurrent chat requests remain one conversation; idempotent replay
   await request.post('/api/watch/select', { headers, data: { episodeId: '2' } });
   const clientRequestId = randomUUID(); const data = { text: 'Can we talk?', clientRequestId };
   const results = await Promise.all([request.post(`/api/chat/${character}/responses`, { headers, data }), request.post(`/api/chat/${character}/responses`, { headers, data })]);
-  expect(results.map(r => r.status()).sort()).toEqual([200, 409]);
+  const statuses = results.map(r => r.status()).sort();
+  expect(statuses[0]).toBe(200);
+  // Network/database latency can serialize arrivals; a completed request replays with 200.
+  expect([200, 409]).toContain(statuses[1]);
+  for (const result of results.filter(r => r.status() === 200)) {
+    expect(await result.text()).toContain(`"id":"${clientRequestId}/reply"`);
+  }
   const history = await (await request.get(`/api/chat/${character}`)).json(); expect(history.messages.length).toBe(2);
   const replay = await request.post(`/api/chat/${character}/responses`, { headers, data }); expect(replay.status()).toBe(200);
   expect((await (await request.get(`/api/chat/${character}`)).json()).messages.length).toBe(2);

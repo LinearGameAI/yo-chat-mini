@@ -1,0 +1,9 @@
+.env*
+!.env.example
+!.env.tiktok.example
+.data
+verification
+test-results
+playwright-report
+node_modules
+dist-server

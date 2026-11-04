@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "tsx watch server/index.ts",
     "start": "NODE_ENV=production node --env-file-if-exists=.env.local dist-server/server/index.js",
@@ -16,6 +18,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "express": "^5.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -34,6 +37,10 @@
     "vite": "^7.1.12"
   },
   "overrides": {
-    "tiktok-minis-cli": { "handlebars": "4.7.10", "express": "4.22.3", "qs": "6.17.1" }
+    "tiktok-minis-cli": {
+      "handlebars": "4.7.10",
+      "express": "4.22.3",
+      "qs": "6.17.1"
+    }
   }
 }

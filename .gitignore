@@ -8,3 +8,4 @@ dist-server/
 test-results/
 playwright-report/
 *.log
+.vercel

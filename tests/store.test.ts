@@ -1,19 +1,37 @@
-import { test } from 'node:test';
+import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { normalizeCatalog } from '../server/content.js';
+import { selectEpisode, tick } from '../server/story.js';
 process.env.DATABASE_PATH = ':memory:';
-const { loginSession, mapTikTokIdentity, findSession, saveSession, db } = await import('../server/store.js');
+process.env.DATABASE_URL = '';
+const { loginSession, mapTikTokIdentity, findSession, saveSession, newSession, updateWatch, saveConversation, acquireReplyLock, releaseReplyLock, db } = await import('../server/store.js');
 const { catalog } = normalizeCatalog(JSON.parse(fs.readFileSync('fixtures/spooky-doll.json', 'utf8')), 'snapshot');
-test('reverified TikTok identity rotates authentication while retaining its own story and conversation', () => {
-  const userId = mapTikTokIdentity('test-client', 'fake-openid-for-unit-test');
-  const first = loginSession(catalog, userId); first.watch.episodes['1'].position = 17;
+after(() => db?.close());
+test('reverified TikTok identity rotates authentication while retaining its own story and conversation', async () => {
+  const userId = await mapTikTokIdentity('test-client', 'fake-openid-for-unit-test');
+  const first = await loginSession(catalog, userId); first.watch.episodes['1'].position = 17;
   first.conversations[catalog.characters[0].id] = { id: 'test-conversation', characterId: catalog.characters[0].id, messages: [] };
-  saveSession(first);
-  const next = loginSession(catalog, mapTikTokIdentity('test-client', 'fake-openid-for-unit-test'));
-  assert.notEqual(next.id, first.id); assert.notEqual(next.csrf, first.csrf); assert.equal(findSession(first.id), undefined);
+  await saveSession(first);
+  const next = await loginSession(catalog, await mapTikTokIdentity('test-client', 'fake-openid-for-unit-test'));
+  assert.notEqual(next.id, first.id); assert.notEqual(next.csrf, first.csrf); assert.equal(await findSession(first.id), undefined);
   assert.equal(next.watch.episodes['1'].position, 17); assert.equal(next.conversations[catalog.characters[0].id].id, 'test-conversation');
-  const unrelated = loginSession(catalog, mapTikTokIdentity('another-client', 'fake-openid-for-unit-test'));
+  const unrelated = await loginSession(catalog, await mapTikTokIdentity('another-client', 'fake-openid-for-unit-test'));
   assert.equal(unrelated.watch.episodes['1'].position, 0); assert.deepEqual(unrelated.conversations, {});
-  db.close();
+});
+test('SQLite keeps watch and conversations independent and rejects stale playback writes', async () => {
+  const session = await newSession(catalog, 'local');
+  const stale = await findSession(session.id); assert.ok(stale);
+  const character = catalog.characters[0].id;
+  session.conversations[character] = { id: 'local-conversation', characterId: character, messages: [] };
+  await Promise.all([updateWatch(stale, watch => { watch.episodes['1'].position = 42; }), saveConversation(session, character, true)]);
+  const merged = await findSession(session.id); assert.ok(merged);
+  assert.equal(merged.watch.episodes['1'].position, 42); assert.equal(merged.conversations[character].id, 'local-conversation');
+  const oldTick = { playbackId: merged.watch.playbackId, nodeId: merged.watch.episodes['1'].nodeId, position: 0, playing: false };
+  await updateWatch(merged, watch => selectEpisode(watch, catalog, '2'));
+  await assert.rejects(updateWatch(stale, watch => tick(watch, oldTick)), /Playback changed/);
+  assert.equal((await findSession(session.id))?.watch.episodeId, '2');
+  const lease = await acquireReplyLock(session.id); assert.ok(lease);
+  assert.equal(await acquireReplyLock(session.id), undefined);
+  await releaseReplyLock(session.id, lease); assert.ok(await acquireReplyLock(session.id));
 });

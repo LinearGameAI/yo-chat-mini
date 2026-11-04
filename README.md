@@ -2,6 +2,25 @@
 
 TikTok Mini Drama 独立 Web 项目，支持观看 **The Spooky Doll’s Revenge** 并与剧中角色聊天。本地目录 `yo-chat-mini/` 与 `YorollApp/` 同级。前端使用 React、TypeScript 和 Vite，后端使用 Express 和 SQLite，需要 Node 24 及以上。
 
+## Vercel 部署
+
+`vercel.json` 将 Vite 静态资源交给 CDN，`api/index.ts` 承接 Express API 和 SSE。Vercel 使用 Node 24；本地启动方式不变。
+
+Vercel 上必须配置独立 Neon Postgres 的 `DATABASE_URL`，用于持久保存会话、观看进度和聊天记录；未设置时服务明确拒绝启动，不使用临时文件保存数据。本地未设置 `DATABASE_URL` 时继续使用 SQLite。聊天仍默认使用下文说明的 Mock；真实模型需要独立配置。
+
+```bash
+vercel link --project yo-chat-mini --scope YOUR_TEAM -y
+vercel deploy --scope YOUR_TEAM -y --no-wait
+```
+
+Vercel 项目 `yo-chat-mini` 已连接本 GitHub 仓库：推送 `main` 自动部署正式环境，其他分支和 PR 自动生成预览。Production、Preview 和 Development 均已连接该项目专用的 Neon 数据库；凭据由 Vercel 环境变量管理，无需提交 `.env.local`、`.vercel/` 或个人 Token。新建 Vercel 项目时，需要在对应环境重新连接 Neon。
+
+GitHub Actions 在每次推送和 PR 上读取 `package.json` 的 Node 版本，执行 `npm ci`、`npm test` 和 `npm run build`。Vercel 同样使用 `npm ci`，按提交的 lockfile 安装依赖。拉取最新 `main` 后，其他开发者可以继续使用下文的本地启动命令，也可直接推送分支进行预览，无需手动执行 Vercel CLI。
+
+此部署为独立 Web 入口；TikTok 登录和官方媒体配置仍按下文的真实平台联调要求提供。
+
+使用 `vercel env pull .env.vercel.development.local --environment development` 拉取开发环境变量后，可运行真实云数据库浏览器测试：`node --env-file=.env.vercel.development.local node_modules/@playwright/test/cli.js test`。设置 `TEST_DATABASE_URL` 后，`npm test` 还会验证跨进程持久化、会话轮换及跨实例聊天锁，并清理自身测试数据。
+
 ## 本地启动
 
 首次克隆后，在项目根目录安装依赖并启动本地服务。
