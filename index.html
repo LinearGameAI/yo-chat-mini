@@ -15,13 +15,15 @@
       initializeMinis();
     </script>
     <script>
-      // Enable the mobile debug panel explicitly so its launcher cannot cover chat controls.
-      if (new URLSearchParams(window.location.search).get('debug') === '1') {
-        const debugScript = document.createElement('script');
-        debugScript.src = 'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
-        debugScript.onload = () => { window.vConsole = new window.VConsole(); };
-        document.head.appendChild(debugScript);
-      }
+      const debugScript = document.createElement('script');
+      debugScript.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      debugScript.onload = () => {
+        const initialize = () => { window.eruda.init(); };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
+        else initialize();
+      };
+      debugScript.onerror = () => { console.warn('Eruda could not load. Check access to cdn.jsdelivr.net.'); };
+      document.head.appendChild(debugScript);
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

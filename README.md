@@ -24,7 +24,7 @@ TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VI
 - 详情、播放、字幕和聊天 API 通过 `X-Drama-Id` 选择短剧，未传时沿用默认示例剧。每部剧的内容缓存、会话 cookie、观看进度和聊天记录独立，TikTok 登录恢复也按用户和短剧区分。
 - 视频页保留返回、暂停/播放、进度条、选集、剧情选项和阶段信息；没有字幕/倍速控制、点赞、收藏、转发或全屏按钮。字幕内容本身继续显示。
 - 当前没有会员/积分授权对接，只加载 `chapterLock.fromChapter` 之前的免费章节，锁定章节仅显示禁用项；没有免费章节时提示并允许返回首页。角色聊天仍受下文所述 Yoroll 用户凭证接入限制。
-- 手机调试浮层通过 URL 参数 `debug=1` 显式开启，默认关闭，避免遮挡聊天发送按钮。
+- 手机调试浮层使用 eruda，通过外部脚本加载并直接初始化，不受 URL 参数限制。
 
 TikTok Mini Drama 独立 Web 项目，支持观看 **The Spooky Doll’s Revenge** 并与剧中角色聊天。本地目录 `yo-chat-mini/` 与 `YorollApp/` 同级。前端使用 React、TypeScript 和 Vite，后端使用 Express 和 SQLite，需要 Node 24 及以上。
 
