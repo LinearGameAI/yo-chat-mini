@@ -4,7 +4,7 @@ test('homepage loads only the list and preserves cards when retrying pagination'
   let attempts = 0;
   const requests: string[] = [];
   page.on('request', request => { if (request.url().includes('/api/')) requests.push(new URL(request.url()).pathname); });
-  await page.route('**/api/dramas?*', async route => {
+  await page.route('**/api/v1/feed/games?*', async route => {
     const secondPage = new URL(route.request().url()).searchParams.get('page') === '2';
     if (secondPage && ++attempts === 1) {
       await route.fulfill({ status: 503, json: { error: '短剧列表加载失败，请稍后重试。' } }); return;
@@ -25,11 +25,11 @@ test('homepage loads only the list and preserves cards when retrying pagination'
   await page.getByRole('button', { name: '重试' }).click();
   await expect(page.getByRole('listitem')).toHaveCount(2);
   await expect(page.getByText('已加载全部短剧')).toBeVisible();
-  expect(requests.every(path => path === '/api/dramas')).toBe(true);
+  expect(requests.every(path => path === '/api/v1/feed/games')).toBe(true);
 });
 
 test('homepage renders a real empty feed', async ({ page }) => {
-  await page.route('**/api/dramas?*', route => route.fulfill({ json: { items: [], page: 1, page_size: 12, total: 0 } }));
+  await page.route('**/api/v1/feed/games?*', route => route.fulfill({ json: { items: [], page: 1, page_size: 12, total: 0 } }));
   await page.goto('/');
   await expect(page.getByText('暂无互动短剧')).toBeVisible();
   await expect(page.getByRole('button', { name: '加载更多' })).toHaveCount(0);
@@ -37,7 +37,7 @@ test('homepage renders a real empty feed', async ({ page }) => {
 
 test('a homepage story opens the real player, existing detail and linked character chat', async ({ page }) => {
   const id = '900a3d4e-6589-4c66-8287-d9bd06937c11';
-  await page.route('**/api/dramas?*', route => route.fulfill({ json: {
+  await page.route('**/api/v1/feed/games?*', route => route.fulfill({ json: {
     items: [{ game_id: id, title: 'The Spooky Doll’s Revenge', cover_image: '', game_engine: 'drama', display_count: 1, tags: '' }],
     page: 1, page_size: 12, total: 1,
   } }));
@@ -57,7 +57,7 @@ test('a homepage story opens the real player, existing detail and linked charact
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(7.5);
   await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
-  await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
+  await expect(page.getByRole('heading', { name: 'Sign in to Yoroll' })).toBeVisible();
   await page.getByRole('button', { name: 'Return to drama', exact: true }).click();
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(7.5);
   await page.getByRole('button', { name: '返回首页', exact: true }).click();

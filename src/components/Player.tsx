@@ -22,6 +22,9 @@ function orderedStageNodes(graph: ChapterGraph) {
 export const timestamp = (n: number) => `${Math.floor((n || 0) / 60)}:${String(Math.floor((n || 0) % 60)).padStart(2, '0')}`;
 export function Player({ data, onWatch, onChat, onHome, onDetail }: { data: Bootstrap; onWatch(w: WatchState): void; onChat(): void; onHome(): void; onDetail(): void }) {
   const { catalog, watch, mode } = data; const ep = catalog.episodes.find(e => e.id === watch.episodeId)!;
+  useEffect(()=>{
+    console.log('ep-----', ep)
+  }, [ep])
   const progress = watch.episodes[ep.id]; const node = ep.graph.nodes.find(n => n.id === progress.nodeId)!;
   const media = useRef<MediaHandle>(null); const [time, setTime] = useState(progress.position); const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false); const [ended, setEnded] = useState(progress.ended || !!progress.pendingInteraction);

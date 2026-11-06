@@ -1,5 +1,19 @@
 # yo-chat-mini
 
+## 静态客户端直连（2026-11-06）
+
+当前前端直接请求 Yoroll 线上服务，不再通过本项目的 Express 转发。列表为 `https://api.lineargame.ai/api/v1/feed/games?game_engine=drama&page=1&page_size=12`；详情、章节和字幕依次直连主 API 与发布 CDN；聊天创建会话、读取历史和 SSE 回复直连 `https://chat-api.lineargame.ai/api/v1`。观看进度按短剧保存在当前浏览器的 localStorage，不再使用服务端会话。
+
+聊天使用 Yoroll 已有的邮箱登录 `/users/login` 和 `/users/me`，用户 token 只保存在当前标签页的 sessionStorage，不写入构建环境变量。TikTok SDK code 不能作为 Yoroll token；仓库中尚无 TikTok → Yoroll 换码契约，当前不会虚构该接口。token 失效后重新登录。会话 ID 按账号、服务地址、短剧和角色隔离，当前标签页刷新后复用。
+
+可通过 `VITE_YOROLL_API_BASE_URL`、`VITE_YOROLL_CHAT_BASE_URL`、`VITE_YOROLL_CONTENT_LANGUAGE` 配置直连地址与语言，默认即生产地址。修改后执行 `npm run build:minis` 并重新上传。前端无需配置 `VITE_API_BASE_URL`、数据库或 Express 适配服务。
+
+线上 API/CDN 必须允许 TikTok 实际页面 origin 的 CORS，请在平台配置中允许主 API、Chat API 和内容 CDN 域名。Chat API 预检需允许 `Authorization`、`Content-Type`、`X-Client-Type`、`X-Client-Platform`、`X-Client-Version`、`X-Device-Id` 等请求头。`yo-chat-server` 使用 `CORS_ALLOWED_ORIGINS` 精确匹配 origin；生产部署工作流从 `PROD_CORS_ALLOWED_ORIGINS` 读取，默认只有 `https://chat.yoroll.ai`，需保留原配置并追加实际 TikTok origin。若跨域不通过，修正线上服务的 CORS 配置；客户端没有代理回退。
+
+TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VITE_TIKTOK_MEDIA_MAP_URL` 读取公开 HTTPS JSON，结构为节点 ID 到 `{ album_id, episode_id, vid }`；不得包含密钥或长期播放 token。缺少映射时明确报错。聊天不向线上接口添加未定义的剧情上下文字段，因此不能保证模型防剧透。
+
+下文涉及 `/api/*`、Express、数据库和 Mock 聊天的说明仅适用于保留的旧服务端代码；当前前端不调用这些接口。
+
 ## 互动短剧首页
 
 首页 `/` 展示与 YorollApp「互动短剧」tab 相同来源的简单列表（封面、标题、会员/付费标记、播放量、标签），支持分页、空态和失败重试。点击条目进入 `/?drama_id={id}#watch` 播放该剧；点击「和角色聊聊」进入已有详情页，选择角色后进入聊天，返回时保留视频进度。未关联角色的剧不显示聊天入口。`/#detail` 仍可访问默认示例剧详情。

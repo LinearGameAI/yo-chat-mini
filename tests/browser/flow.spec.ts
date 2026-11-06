@@ -1,6 +1,16 @@
 import { expect, test } from '@playwright/test';
 
-test('real story playback → context-limited mock chat → resume, history and chapter restoration', async ({ page }, info) => {
+test('real story playback → direct chat protocol fixture → resume, history and chapter restoration', async ({ page }, info) => {
+  // Chat transport is intercepted: no paid reply or real account is used in this test.
+  await page.addInitScript(() => sessionStorage.setItem('yoroll-mini-auth:https://api.lineargame.ai/api/v1', JSON.stringify({ token: 'browser-fixture-token', userId: 'browser-fixture-user' })));
+  let replied = false;
+  const chatBase = 'https://chat-api.lineargame.ai/api/v1';
+  await page.route(`${chatBase}/companions/*/conversations`, route => route.fulfill({ json: { conversation: { id: 'browser-fixture-conversation' } } }));
+  await page.route(`${chatBase}/conversations/browser-fixture-conversation/messages?*`, route => route.fulfill({ json: { messages: replied ? [{ id: 'reply-one', role: 'assistant', text: 'The last words you heard.' }] : [] } }));
+  await page.route(`${chatBase}/conversations/browser-fixture-conversation/responses`, route => {
+    replied = true;
+    return route.fulfill({ contentType: 'text/event-stream', body: `event: response.completed\ndata: ${JSON.stringify({ userMessage: { id: 'user-one', text: 'What just happened?' }, replyMessage: { id: 'reply-one', text: 'The last words you heard.' } })}\n\n` });
+  });
   const browserErrors: string[] = []; page.on('pageerror', e => browserErrors.push(e.message));
   await page.goto('/#detail');
   await expect(page.getByRole('heading', { name: 'The Spooky Doll’s Revenge', exact: true })).toBeVisible();
@@ -17,7 +27,7 @@ test('real story playback → context-limited mock chat → resume, history and 
   await page.screenshot({ path: info.outputPath('player.png'), scale: 'css' });
   await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
-  await expect(page.getByText('Mock replies · Local conversation preview', { exact: true })).toBeVisible();
+  await expect(page.getByText('AI character · Replies may be inaccurate', { exact: true })).toBeVisible();
   await page.getByRole('textbox', { name: 'Message Daniel' }).fill('What just happened?');
   await page.getByRole('button', { name: 'Send message', exact: true }).click();
   await expect(page.locator('.message.assistant')).toContainText('last words you heard');
@@ -63,9 +73,9 @@ test('saved position survives leaving before the media metadata loads', async ({
     await expect(video).toHaveJSProperty('readyState', 0);
     await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
     await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
-    await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
-    const bootstrap = await (await page.request.get('/api/bootstrap')).json();
-    expect(bootstrap.watch.episodes[bootstrap.watch.episodeId].position).toBeCloseTo(12, 0);
+    await expect(page.getByRole('heading', { name: 'Sign in to Yoroll' })).toBeVisible();
+    const watch = await page.evaluate(() => JSON.parse(localStorage.getItem('yoroll-mini-watch:900a3d4e-6589-4c66-8287-d9bd06937c11') || 'null'));
+    expect(watch.episodes[watch.episodeId].position).toBeCloseTo(12, 0);
   } finally {
     release();
     await page.unrouteAll({ behavior: 'wait' });
@@ -91,7 +101,7 @@ test('published branch selection survives chat and page refresh', async ({ page 
   await expect.poll(() => video.getAttribute('src')).toContain('B01');
   await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
-  await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
+  await expect(page.getByRole('heading', { name: 'Sign in to Yoroll' })).toBeVisible();
   await page.reload();
   await page.getByRole('button', { name: 'Return to drama', exact: true }).click();
   await expect.poll(() => video.getAttribute('src')).toContain('B01');

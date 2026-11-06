@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Bootstrap, WatchState } from '../shared/types';
-import { api, setCsrf } from './lib/api';
-import { loginTikTok } from './platform/tiktok';
+import { api } from './lib/api';
+import { mainBase } from './lib/yoroll';
 import { Player } from './components/Player';
 import { Chat } from './components/Chat';
 import { DramaDetail } from './components/DramaDetail';
@@ -24,8 +24,6 @@ export default function App() {
       let stage = 'bootstrap';
       try {
         let result = await api<Bootstrap>('/bootstrap', undefined, controller.signal);
-        if (result.mode === 'tiktok' && !result.authenticated) { stage = 'TikTok login'; await loginTikTok(); stage = 'bootstrap after TikTok login'; result = await api<Bootstrap>('/bootstrap', undefined, controller.signal); }
-        setCsrf(result.csrf);
         if (params.get('drama_id') && params.get('drama_id') !== result.catalog.id) throw new Error('The requested story could not be loaded.');
         const episodeId = params.get('episode_id');
         if (episodeId && !window.sessionStorage.getItem(`entry:${window.location.search}`)) {
@@ -35,7 +33,7 @@ export default function App() {
         if (!controller.signal.aborted) setData(result);
       } catch (e) {
         if (!controller.signal.aborted) {
-          console.error('[yo-chat-mini] App startup failed', { stage, apiBase: import.meta.env.VITE_API_BASE_URL || '(same origin)', pageOrigin: window.location.origin, error: e });
+          console.error('[yo-chat-mini] App startup failed', { stage, apiBase: mainBase, pageOrigin: window.location.origin, error: e });
           setError((e as Error).message);
         }
       }
@@ -44,7 +42,7 @@ export default function App() {
   const updateWatch = (w: WatchState) => setData(d => d ? { ...d, watch: w } : d);
   async function refreshAndGo(to: string) {
     if (to === 'home') { window.location.assign(window.location.pathname); return; }
-    try { const fresh = await api<Bootstrap>('/bootstrap'); setCsrf(fresh.csrf); setData(fresh); go(to); } catch (e) { setError((e as Error).message); }
+    try { const fresh = await api<Bootstrap>('/bootstrap'); setData(fresh); go(to); } catch (e) { setError((e as Error).message); }
   }
   if (isHome) return <div className="app-shell"><DramaList /></div>;
   if (!data) return <div className="app-shell"><main className="loading-page">{error ? <><h1>Unable to open this story</h1><p role="alert">{error}</p><button className="primary" onClick={() => { setError(''); setRetry(n => n + 1); }}>Try again</button><button className="secondary" onClick={() => window.location.assign(window.location.pathname)}>返回首页</button></> : <><div className="spinner" /><p role="status">Opening the story…</p></>}</main></div>;

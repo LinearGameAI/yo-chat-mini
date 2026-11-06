@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import type { DramaList as Feed, DramaListItem } from '../../shared/types';
-import { api } from '../lib/api';
+import type { DramaListItem } from '../../shared/types';
+import { fetchDramas } from '../lib/yoroll';
 
 function playCount(count: number) {
   const value = Number.isFinite(count) ? Math.max(0, count) : 0;
@@ -22,7 +22,7 @@ export function DramaList() {
     request.current = controller;
     setLoading(true); setError('');
     try {
-      const data = await api<Feed>(`/dramas?page=${nextPage}`, undefined, controller.signal);
+      const data = await fetchDramas(nextPage, controller.signal);
       if (controller.signal.aborted) return;
       setItems(previous => [...new Map([...previous, ...data.items].map(item => [item.game_id, item])).values()]);
       setLoaded(previous => previous + data.items.length);

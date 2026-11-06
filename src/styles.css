@@ -35,3 +35,8 @@
 @media(min-width:700px){.app-shell{border-inline:1px solid #ffffff0a}}
 @media(max-width:359px){.chat-header{gap:4px}.chat-header>.icon-button{width:32px}.chat-title{gap:4px}.chat-title img{width:28px;height:28px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.001ms!important}}
+.chat-login { position: relative; z-index: 1; margin: 20px 24px; display: grid; gap: 12px; }
+.chat-login h2, .chat-login p { margin: 0; }
+.chat-login label { display: grid; gap: 6px; }
+.chat-login input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #ffffff38; border-radius: 12px; background: #16161fcc; color: white; font: inherit; }
+.chat-signout { background: transparent; color: inherit; opacity: .7; border: 0; font: inherit; }
