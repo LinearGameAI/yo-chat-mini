@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { neon } from '@neondatabase/serverless';
-import type { Catalog, Conversation, Session, WatchState } from '../shared/types.js';
+import { DRAMA_ID, type Catalog, type Conversation, type Session, type WatchState } from '../shared/types.js';
 import { AppError, initialWatch } from './story.js';
 
 const sql = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : undefined;
@@ -63,7 +63,7 @@ export async function saveConversation(session: Session, characterId: string, on
   return session.conversations[characterId];
 }
 export async function newSession(catalog: Catalog, identity: Session['identity'], userId: string = randomUUID()): Promise<Session> {
-  const session: Session = { id: randomUUID(), csrf: randomUUID(), identity, userId, watch: initialWatch(catalog), conversations: {} };
+  const session: Session = { id: randomUUID(), csrf: randomUUID(), identity, userId, dramaId: catalog.id, watch: initialWatch(catalog), conversations: {} };
   await saveSession(session); return session;
 }
 export async function mapTikTokIdentity(clientKey: string, openId: string) {
@@ -75,8 +75,8 @@ export async function mapTikTokIdentity(clientKey: string, openId: string) {
 }
 export async function loginSession(catalog: Catalog, userId: string): Promise<Session> {
   const row = sql
-    ? (await sql`SELECT id,data::text FROM sessions WHERE data->>'identity'='tiktok' AND data->>'userId'=${userId} LIMIT 1`)[0] as { id: string; data: string } | undefined
-    : db!.prepare("SELECT id,data FROM sessions WHERE json_extract(data,'$.identity')='tiktok' AND json_extract(data,'$.userId')=? LIMIT 1").get(userId) as { id: string; data: string } | undefined;
+    ? (await sql`SELECT id,data::text FROM sessions WHERE data->>'identity'='tiktok' AND data->>'userId'=${userId} AND COALESCE(data->>'dramaId',${DRAMA_ID})=${catalog.id} LIMIT 1`)[0] as { id: string; data: string } | undefined
+    : db!.prepare("SELECT id,data FROM sessions WHERE json_extract(data,'$.identity')='tiktok' AND json_extract(data,'$.userId')=? AND COALESCE(json_extract(data,'$.dramaId'),?)=? LIMIT 1").get(userId, DRAMA_ID, catalog.id) as { id: string; data: string } | undefined;
   if (!row) return newSession(catalog, 'tiktok', userId);
   const s: Session = JSON.parse(row.data);
   // Rotate both session ID and CSRF token on every freshly verified login.

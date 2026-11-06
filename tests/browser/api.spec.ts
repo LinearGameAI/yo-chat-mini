@@ -1,6 +1,22 @@
 import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 
+test('selected drama APIs isolate progress, CSRF and linked characters', async ({ request }) => {
+  const first = await (await request.get('/api/bootstrap')).json();
+  const selectedId = 'af879808-ca41-4196-8955-61774be098b4';
+  const selectedHeaders = { 'X-Drama-Id': selectedId };
+  const second = await (await request.get('/api/bootstrap', { headers: selectedHeaders })).json();
+  expect(second.catalog.id).toBe(selectedId);
+  expect(second.watch.playbackId).not.toBe(first.watch.playbackId);
+  const tick = { playbackId: first.watch.playbackId, nodeId: first.watch.episodes[first.watch.episodeId].nodeId, position: 5, playing: false };
+  expect((await request.post('/api/watch/tick', { headers: { ...selectedHeaders, 'X-CSRF-Token': first.csrf }, data: tick })).status()).toBe(403);
+  expect((await request.post('/api/watch/tick', { headers: { ...selectedHeaders, 'X-CSRF-Token': second.csrf }, data: tick })).status()).toBe(409);
+  expect((await request.get(`/api/context/${first.catalog.characters[0].id}`, { headers: selectedHeaders })).status()).toBe(400);
+  const restored = await (await request.get('/api/bootstrap')).json();
+  expect(restored.catalog.id).toBe(first.catalog.id);
+  expect(restored.watch).toEqual(first.watch);
+});
+
 test('adapter rejects untrusted story fields, unknown IDs, CSRF and disallowed origins', async ({ request }) => {
   const boot = await (await request.get('/api/bootstrap')).json(); const headers = { 'X-CSRF-Token': boot.csrf };
   const character = boot.catalog.characters[0].id;

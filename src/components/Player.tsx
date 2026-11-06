@@ -20,14 +20,16 @@ function orderedStageNodes(graph: ChapterGraph) {
 }
 
 export const timestamp = (n: number) => `${Math.floor((n || 0) / 60)}:${String(Math.floor((n || 0) % 60)).padStart(2, '0')}`;
-export function Player({ data, onWatch, onChat, onHome }: { data: Bootstrap; onWatch(w: WatchState): void; onChat(): void; onHome(): void }) {
+export function Player({ data, onWatch, onChat, onHome, onDetail }: { data: Bootstrap; onWatch(w: WatchState): void; onChat(): void; onHome(): void; onDetail(): void }) {
   const { catalog, watch, mode } = data; const ep = catalog.episodes.find(e => e.id === watch.episodeId)!;
+  useEffect(()=>{
+    console.log('ep-----', ep)
+  }, [ep])
   const progress = watch.episodes[ep.id]; const node = ep.graph.nodes.find(n => n.id === progress.nodeId)!;
   const media = useRef<MediaHandle>(null); const [time, setTime] = useState(progress.position); const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false); const [ended, setEnded] = useState(progress.ended || !!progress.pendingInteraction);
   const [chapters, setChapters] = useState(false); const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   const [cues, setCues] = useState<SubtitleCue[]>([]); const [countdown, setCountdown] = useState(0); const [hint, setHint] = useState(false);
-  const [captions, setCaptions] = useState(true); const [clean, setClean] = useState(false);
   const queue = useRef(Promise.resolve()); const prompt = useRef(new DramaChatPromptSession()); const active = useRef(true); const latestTime = useRef(progress.position);
   const body = (playingOverride?: boolean) => ({ playbackId: watch.playbackId, nodeId: node.id, position: media.current?.time() ?? latestTime.current, playing: playingOverride ?? !(media.current?.paused() ?? true) });
   function sync(playingOverride?: boolean) {
@@ -82,20 +84,18 @@ export function Player({ data, onWatch, onChat, onHome }: { data: Bootstrap; onW
   }
   const cue = findCue(cues, time * 1000); const index = catalog.episodes.indexOf(ep);
   const showChoices = ended && !progress.ended && (!!node.choices?.length || !!node.qte);
-  return <main className={`player-page ${clean ? 'clean-player' : ''}`}>
+  return <main className="player-page">
     <Media ref={media} mode={mode} src={nodeVideoUrl(ep.graph.cdnBase, node)} nodeId={node.id} poster={node.coverImage} start={progress.position}
       onTime={(t, d) => {
         latestTime.current = t; setTime(t); if (Number.isFinite(d)) setDuration(d);
         if (Math.abs(t - progress.position) > 0.2) onWatch({ ...watch, episodes: { ...watch.episodes, [ep.id]: { ...progress, position: t } } });
       }} onPlaying={value => { setPlaying(value); void sync(value).catch(() => {}); }} onEnded={() => void finish()} onError={setError} />
     <div className="player-shade" />
-    <header className="player-top"><button className="icon-button" aria-label="Back to drama" onClick={() => void navigate(onHome)}><Icon name="back" size={18} /></button><span>{ep.title}</span>
-      {cues.length > 0 && <button className="player-pill captions-toggle" aria-label="Subtitles" aria-pressed={captions} onClick={() => setCaptions(value => !value)}>CC</button>}
-    </header>
+    <header className="player-top"><button className="icon-button" aria-label="返回首页" onClick={() => void navigate(onHome)}><Icon name="back" size={18} /></button><span>第{index + 1}集</span></header>
     {!showChoices && !progress.ended && <button className={`play-toggle ${playing ? 'is-playing' : ''}`} aria-label={playing ? 'Pause video' : 'Play video'} onClick={() => {
       if (playing) media.current?.pause(); else { setError(''); void media.current?.play().catch(() => setError('Tap play again to start playback.')); }
     }}><DramaPlayerIcon name="play" size={44} /></button>}
-    {cue && captions && !showChoices && <div className="subtitle">{cue.text}</div>}
+    {cue && !showChoices && <div className="subtitle">{cue.text}</div>}
     {showChoices && <section className="choice-panel" aria-label="Story choices"><p>{node.question || (node.qte ? 'React before time runs out' : 'Choose your next move')}{countdown > 0 && <span className="choice-time">{Math.ceil(countdown)}s</span>}</p>
       <div className="choice-options">{node.choices?.map(c => <button key={c.key} disabled={busy} className="choice-button" onClick={() => void transition(c.key)}><span>{c.label}</span></button>)}</div>
       {node.qte && <button className="qte-button" disabled={busy} onClick={() => void transition(undefined, 'success')}>Tap now</button>}
@@ -105,10 +105,10 @@ export function Player({ data, onWatch, onChat, onHome }: { data: Bootstrap; onW
       <button className="secondary" onClick={() => void select(ep.id, true)}><Icon name="restart" size={18} /> Replay episode</button></section>}
     <div className="player-caption">
       {error && <div className="error" role="alert">{error}</div>}
-      <button className="player-title" onClick={() => void navigate(onHome)}><h1>{catalog.title}</h1><Icon name="next" size={15} /></button>
-      <div className="player-cast" title={hint ? 'Talk about the moment you just watched' : undefined}><CastEntry catalog={catalog} onClick={() => void navigate(onChat)} /></div>
+      <button className="player-title" onClick={() => void navigate(onDetail)}><h1>{catalog.title}</h1><Icon name="next" size={15} /></button>
+      {catalog.characters.length > 0 && <div className="player-cast" title={hint ? 'Talk about the moment you just watched' : undefined}><CastEntry catalog={catalog} onClick={() => void navigate(onChat)} /></div>}
     </div>
-    <button className="episodes-bar" aria-label="Open episodes" onClick={() => { media.current?.pause(); setChapters(true); }}><img src={ep.cover} alt="" /><span>Episodes · {catalog.episodes.length} episodes</span><Icon name="next" size={16} /></button>
+    <button className="episodes-bar" aria-label="Open episodes" onClick={() => { media.current?.pause(); setChapters(true); }}><img src={ep.cover || catalog.cover} alt="" /><span>选集 · {catalog.finished === false ? '更新中' : '已完结'} · 共{catalog.totalEpisodes ?? catalog.episodes.length}集</span><Icon name="next" size={16} /></button>
     <div className="seek-line" style={{ '--played': `${duration ? Math.min(100, time / duration * 100) : 0}%` } as CSSProperties}>
       <input aria-label="Playback position" type="range" min="0" max={duration || 1} step="0.1" value={Math.min(time, duration || 1)} onChange={e => { media.current?.seek(Number(e.target.value)); setTime(Number(e.target.value)); void sync().catch(() => {}); }} />
       <span className="seek-time">{timestamp(time)} / {timestamp(duration)}</span>
@@ -116,10 +116,11 @@ export function Player({ data, onWatch, onChat, onHome }: { data: Bootstrap; onW
     <footer className="player-band"><div className="episode-navigation">
       <button disabled={index === 0 || busy} onClick={() => void select(catalog.episodes[index - 1].id)} aria-label="Previous episode"><Icon name="back" size={18} /></button>
       <span>{index + 1} / {catalog.episodes.length}</span><button disabled={index === catalog.episodes.length - 1 || busy} onClick={() => void select(catalog.episodes[index + 1].id)} aria-label="Next episode"><Icon name="next" size={18} /></button>
-    </div><div className="band-right"><span className="player-pill">Stage {orderedStageNodes(ep.graph).findIndex(n => n.id === node.id) + 1}</span><button className="icon-button" aria-label={clean ? 'Show player controls' : 'Hide player controls'} onClick={() => setClean(value => !value)}><DramaPlayerIcon name={clean ? 'collapse' : 'expand'} size={24} /></button></div></footer>
+    </div><div className="band-right"><span className="player-pill">Stage {orderedStageNodes(ep.graph).findIndex(n => n.id === node.id) + 1}</span></div></footer>
     {chapters && <Sheet title="Episodes" onClose={() => setChapters(false)} className="episode-sheet">
       <header className="sheet-drama-header"><img src={catalog.cover} alt="" /><div><h2>{catalog.title}</h2><p>{catalog.episodes.length} episodes</p><div className="sheet-tags">{catalog.tags.filter(t => t !== 'interactive_drama').slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div></div></header>
       <h3 className="sheet-section-title">Episodes</h3><EpisodeCells catalog={catalog} watch={watch} busy={busy} onSelect={id => void select(id)} />
+      {!!catalog.lockedEpisodes?.length && <p className="locked-notice">后续章节需要会员或解锁后观看。</p>}
     </Sheet>}
   </main>;
 }

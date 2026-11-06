@@ -1,5 +1,31 @@
 # yo-chat-mini
 
+## 静态客户端直连（2026-11-06）
+
+当前前端直接请求 Yoroll 线上服务，不再通过本项目的 Express 转发。列表为 `https://api.lineargame.ai/api/v1/feed/games?game_engine=drama&page=1&page_size=12`；详情、章节和字幕依次直连主 API 与发布 CDN；聊天创建会话、读取历史和 SSE 回复直连 `https://chat-api.lineargame.ai/api/v1`。观看进度按短剧保存在当前浏览器的 localStorage，不再使用服务端会话。
+
+聊天使用 Yoroll 已有的邮箱登录 `/users/login` 和 `/users/me`，用户 token 只保存在当前标签页的 sessionStorage，不写入构建环境变量。TikTok SDK code 不能作为 Yoroll token；仓库中尚无 TikTok → Yoroll 换码契约，当前不会虚构该接口。token 失效后重新登录。会话 ID 按账号、服务地址、短剧和角色隔离，当前标签页刷新后复用。
+
+可通过 `VITE_YOROLL_API_BASE_URL`、`VITE_YOROLL_CHAT_BASE_URL`、`VITE_YOROLL_CONTENT_LANGUAGE` 配置直连地址与语言，默认即生产地址。修改后执行 `npm run build:minis` 并重新上传。前端无需配置 `VITE_API_BASE_URL`、数据库或 Express 适配服务。
+
+线上 API/CDN 必须允许 TikTok 实际页面 origin 的 CORS，请在平台配置中允许主 API、Chat API 和内容 CDN 域名。Chat API 预检需允许 `Authorization`、`Content-Type`、`X-Client-Type`、`X-Client-Platform`、`X-Client-Version`、`X-Device-Id` 等请求头。`yo-chat-server` 使用 `CORS_ALLOWED_ORIGINS` 精确匹配 origin；生产部署工作流从 `PROD_CORS_ALLOWED_ORIGINS` 读取，默认只有 `https://chat.yoroll.ai`，需保留原配置并追加实际 TikTok origin。若跨域不通过，修正线上服务的 CORS 配置；客户端没有代理回退。
+
+TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VITE_TIKTOK_MEDIA_MAP_URL` 读取公开 HTTPS JSON，结构为节点 ID 到 `{ album_id, episode_id, vid }`；不得包含密钥或长期播放 token。缺少映射时明确报错。聊天不向线上接口添加未定义的剧情上下文字段，因此不能保证模型防剧透。
+
+下文涉及 `/api/*`、Express、数据库和 Mock 聊天的说明仅适用于保留的旧服务端代码；当前前端不调用这些接口。
+
+## 互动短剧首页
+
+首页 `/` 展示与 YorollApp「互动短剧」tab 相同来源的简单列表（封面、标题、会员/付费标记、播放量、标签），支持分页、空态和失败重试。点击条目进入 `/?drama_id={id}#watch` 播放该剧；点击「和角色聊聊」进入已有详情页，选择角色后进入聊天，返回时保留视频进度。未关联角色的剧不显示聊天入口。`/#detail` 仍可访问默认示例剧详情。
+
+- 原接口：`GET https://api.lineargame.ai/api/v1/feed/games?game_engine=drama&page=1&page_size=12`，来源为同级 `YorollApp/src/api/feed.ts` 的 `getFeedGames`。
+- 本项目代理：`GET /api/dramas?page=1`，固定 `game_engine=drama`、每页 12 条，沿用 `YOROLL_API_BASE_URL` 和 `YOROLL_CONTENT_LANGUAGE`（通过 `Accept-Language` 传递，默认 `en-US`）。
+- 首页独立请求列表，不加载单剧章节/字幕，也不要求观看会话；不使用本地假数据。
+- 详情、播放、字幕和聊天 API 通过 `X-Drama-Id` 选择短剧，未传时沿用默认示例剧。每部剧的内容缓存、会话 cookie、观看进度和聊天记录独立，TikTok 登录恢复也按用户和短剧区分。
+- 视频页保留返回、暂停/播放、进度条、选集、剧情选项和阶段信息；没有字幕/倍速控制、点赞、收藏、转发或全屏按钮。字幕内容本身继续显示。
+- 当前没有会员/积分授权对接，只加载 `chapterLock.fromChapter` 之前的免费章节，锁定章节仅显示禁用项；没有免费章节时提示并允许返回首页。角色聊天仍受下文所述 Yoroll 用户凭证接入限制。
+- 手机调试浮层使用 eruda，通过外部脚本加载并直接初始化，不受 URL 参数限制。
+
 TikTok Mini Drama 独立 Web 项目，支持观看 **The Spooky Doll’s Revenge** 并与剧中角色聊天。本地目录 `yo-chat-mini/` 与 `YorollApp/` 同级。前端使用 React、TypeScript 和 Vite，后端使用 Express 和 SQLite，需要 Node 24 及以上。
 
 ## Vercel 部署
@@ -27,10 +53,12 @@ GitHub Actions 在每次推送和 PR 上读取 `package.json` 的 Node 版本，
 
 ```sh
 npm ci
-npm run dev
+npm run dev:local
 ```
 
-打开 **http://localhost:5173**。一个命令同时启动页面和 API，无需登录、环境变量或生产 Token。已构建版本可用 `npm start` 启动；两个命令使用同一端口，不应同时运行。
+打开 **http://localhost:5173**。一个命令同时启动页面和 API；本地观看无需登录。聊天默认使用 Yoroll，需要用户级 Yoroll 凭证（TikTok 换凭证接口待后端提供）。已构建版本可用 `npm start` 启动；两个命令使用同一端口，不应同时运行。
+
+`npm run dev:local` 在本地开发时强制使用 local 会话，跳过 `TTMinis.login` 并使用原始视频 URL，即使启动环境中已有 `APP_MODE=tiktok` 也可调试网页。`npm run dev` 按 `APP_MODE` 启动；真机联调仍使用 `npm run dev:minis`。切换模式前先停止占用 5173 端口的旧服务。
 
 观看进度、章节位置、选择、会话和聊天历史保存在本机 `.data/mini.sqlite`；浏览器仅持有 HttpOnly 本地会话 cookie。浏览器内置返回、刷新、聊天返回和章节切换都保留进度。已有页面重新进入时按服务端进度恢复。
 
@@ -41,13 +69,40 @@ npm run dev
 | 标题、简介、封面、10 集、49 节点、13 处选择、1 处 QTE | 来自真实公开 API 和版本化 CDN；不是编造素材 |
 | 关联角色 | API 返回的 Daniel Renault，`yt_daniel_renault_married_doll`；不添加虚构角色 |
 | 视频 | 本地模式使用原始真实 MP4；TikTok 模式使用官方 VePlayer，缺映射时明确报错 |
-| 内容接口不可达 | 使用 `fixtures/spooky-doll.json` 中带来源和时间的真实 API 快照，页面标记为 saved API content；视频仍需网络 |
-| 聊天 | 默认 **Mock**：模板回复，通过真实 SSE 逐块传输。不是已连通 YoChat 或真实 AI；页面明确标记 |
+| 内容接口不可达 | 返回 503 并显示加载错误，可点击重试；不读取本地快照或 Mock 短剧 |
+| 聊天 | 默认 **Yoroll**：按角色创建独立会话，再通过会话 ID 调用 SSE；TikTok → Yoroll 鉴权尚待后端提供，缺凭证时明确报错。Mock 仅供显式离线测试 |
 | 剧情关联 | 服务端从已发布图和字幕建立上下文，不接受前端传入剧情文本。保存剧、集、节点、角色、播放区间、选择 |
 | 防剧透 | 仅加入实际播放区间内的完整字幕；拖动到后面不会把跳过的对白记作已看。回看/换分支会过滤不再可见的历史及幂等重放 |
 | TikTok 身份 | 独立代码换码、身份映射、会话轮换/恢复已实现；真实换码未验证 |
 
-当前源字幕只有中文 SRT；视频仍使用原发布内容。Mock 会引用这些原始字幕，没有伪造英语字幕或把自动翻译冒充原数据。QTE 延续原 App 的“片段结束后交互”行为；发布数据另含 `delay_from_start_seconds`，本版未按该字段改为片中触发。
+短剧获取复用 YorollApp 的线上协议：`GET /feed/games/{dramaId}` → `game.game_json_url` → `chapters[].dataPath` → 节点视频和字幕。章节 JSON 的目录作为视频、封面和字幕的资源基址，不使用 `meta.cdnBase` 或 `videoBaseUrl`。清单和章节请求失败时最多重试两次。首页所选短剧复用同一套详情、播放及角色聊天页面。
+
+`YOROLL_API_BASE_URL` 默认 `https://api.lineargame.ai/api/v1`，测试环境可设为 `https://test-api.lineargame.ai/api/v1`；`YOROLL_CONTENT_LANGUAGE` 默认 `en-US`，通过 `Accept-Language` 交给服务端选择内容语言。线上内容首次请求时加载，并在服务进程内缓存；失败不会缓存，下次请求会重新获取。旧 `CONTENT_SOURCE` 配置不再生效。`fixtures/spooky-doll.json` 仅供自动化测试及 `sync:content` 保存参考数据使用，不参与运行时加载。
+
+字幕按线上节点下发的 `subtitles` 获取；视频使用原发布内容。显式 Mock 聊天会引用这些原始字幕，没有伪造英语字幕或把自动翻译冒充原数据。QTE 延续原 App 的“片段结束后交互”行为；发布数据另含 `delay_from_start_seconds`，本版未按该字段改为片中触发。
+
+### Yoroll 聊天接口
+
+```dotenv
+CHAT_PROVIDER=yoroll
+YOROLL_CHAT_BASE_URL=https://chat-api.lineargame.ai/api/v1
+# 可选，省略时沿用服务端会话默认模型
+CHAT_MODEL=
+```
+
+测试环境地址为 `https://test-chat-api.lineargame.ai/api/v1`。Vercel 已有的 `CHAT_PROVIDER=mock` 需要改为 `yoroll` 并重新部署。
+
+协议参考同级 `yorollapp/src/api/chat/conversations.ts`、`chatStream.ts` 和 `types.ts`：
+
+- `POST /companions/:companionId/conversations`，传 `{ startNew: true }`，读取 `conversation.id`。角色 ID 使用内容 API 返回的 `character.id`。
+- `POST /conversations/:conversationId/responses`，传 `text`、原始 `clientRequestId`、`streamFormat: "blocks"` 和可选 `model`。
+- 处理 `block.updated` 完整块快照、`text.delta`、`response.completed` 和 `response.failed`；建议选项不混入正文，失败或未完成的流不保存为成功消息。
+
+远端会话 ID 保存在当前用户的本地会话记录中，重试复用会话及幂等键；回看或切换分支导致可见历史变化时创建新的远端会话，防止继续使用已隐藏的远端历史。
+
+**鉴权接入点**：`server/yoroll.ts` 的 `requireYorollAuth(session)` 读取服务端会话中的 `yorollAuth: { accessToken, userId }`。后续在 `/api/auth/tiktok` 中调用后端正式提供的换凭证接口，确认用户身份后写入该字段并持久化；当前未猜测换码 URL、返回字段或刷新协议，TikTok token 不能直接作为 Yoroll Bearer token。凭证不通过聊天请求体、环境共享账号或 bootstrap 下发。当前缺凭证时返回明确的 503，不能视为真实聊天已联调完成。
+
+现有 Yoroll 创建/发送接口没有可信剧情上下文字段，本次不新增未经后端确认的参数、不写 pinned memory。已看上下文及本地消息过滤仍保留，但 Yoroll 使用其自身角色设定和远端历史，**不能保证生成不剧透**。可信上下文约束、鉴权刷新和真实模型效果需后续后端协议及联调确认。
 
 可选真实模型由独立服务调用 OpenAI-compatible `chat/completions`，在 `.env.local` 配置：
 
@@ -58,9 +113,7 @@ CHAT_API_KEY=
 CHAT_MODEL=
 ```
 
-未配置时保持 Mock，不自动搜索或使用机器上的其他服务凭据。模型收到服务端核验的已看对白，不会收到整部剧简介、完整角色开场或隐藏 persona；生成质量及自由输入下的不剧透能力仍需接入后的真实模型验收。本次没有执行付费模型调用。
-
-现有 YoChat 创建/发送接口没有可信剧情上下文字段。直接使用其完整角色开场可能提前剧透，因此本 MVP 不向现有生产聊天链路写入 pinned memory，也不将 TikTok 身份冒充 LGPlatform 用户。将来复用 YoChat 需要受信剧情上下文接口以及用户身份映射/独立 OAuth client 配置。
+OpenAI-compatible 模式会收到服务端核验的已看对白；其防剧透能力仍需真实模型验收。显式设置 `CHAT_PROVIDER=mock` 可使用离线模板进行开发测试。服务失败不会自动回退 Mock，也不会搜索机器上的其他服务凭据。本次没有执行付费模型调用。
 
 ## TikTok 官方工具
 
@@ -86,9 +139,9 @@ npm run dev:minis
 3. BytePlus / TikTok 审核并上架的媒体，按源节点配置实际 `album_id` / `episode_id` / `vid`。`config/tiktok-media.example.json` 仅提供结构；通过服务端 `TIKTOK_MEDIA_MAP_FILE` 指定真实映射文件。旧客户端需要短期播放凭证时，应接入官方凭证签发服务；不能长期复用过期 token。
 4. 在 iOS / Android TikTok 实际验证登录、官方播放器、键盘、返回、前后台和流式网络。现有视频 URL 只用于本地播放，不能替代平台媒体审核和播放器限制。
 
-SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login({success, fail})`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。Client Secret 和业务 Token 不写入前端。平台能力缺配置时明确失败，不退回原始视频 URL。
+SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login(callback)`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。启动时，只有 `/api/bootstrap` 返回 `mode: 'tiktok'` 且 `authenticated: false` 才调用登录；前端从回调的 `authResponse.code` 取码，提交到 `/api/auth/tiktok` 由服务端换取凭证并建立会话。已有会话或 local 模式会跳过 SDK 登录。Client Secret 和业务 Token 不写入前端。平台能力缺配置时明确失败，不退回原始视频 URL。
 
-外部入口参数支持 `drama_id`、`episode_id`（本地章号或真实 externalId）、`character_id`；只能定位本剧及关联角色。例如 `/?drama_id=900a3d4e-6589-4c66-8287-d9bd06937c11&episode_id=1&character_id=yt_daniel_renault_married_doll`。
+外部入口参数支持 `drama_id`、`episode_id`（本地章号或真实 externalId）、`character_id`；章节和角色必须关联所选短剧。例如 `/?drama_id=900a3d4e-6589-4c66-8287-d9bd06937c11&episode_id=1&character_id=yt_daniel_renault_married_doll`。
 
 ## 验证与构建
 

@@ -1,4 +1,3 @@
-import { api } from '../lib/api';
 export interface PlayerKernel { currentTime: number; duration: number; paused: boolean; play(): Promise<void> | void; pause(): void }
 export interface VeInstance { player?: PlayerKernel; on(event: string, cb: (data?: any) => void): void; destroy(): void }
 export interface VeConstructor { new(options: Record<string, unknown>): VeInstance; Events: Record<string, string> }
@@ -36,7 +35,8 @@ export async function loginTikTok() {
       }
     });
   });
-  await api('/auth/tiktok', { code });
+  // A TikTok code is not a Yoroll bearer token. Only return it to an explicit caller.
+  return code;
 }
 export function subscribeLifecycle(hide: () => void, show: () => void, platform: boolean) {
   const visibility = () => document.hidden ? hide() : show();

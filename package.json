@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "tsx watch server/index.ts",
+    "dev:local": "tsx watch server/index.ts --local",
     "start": "NODE_ENV=production node --env-file-if-exists=.env.local dist-server/server/index.js",
     "build": "tsc --noEmit && vite build && tsc -p tsconfig.server.json",
     "build:minis": "npm run build && minis build",
@@ -15,7 +16,8 @@
     "dev:minis": "node scripts/minis-local.mjs",
     "sync:content": "tsx scripts/sync-content.ts",
     "test": "tsx --test tests/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:direct": "playwright test --config playwright.direct.config.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",

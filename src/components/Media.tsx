@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { api } from '../lib/api';
+import { jsonRequest } from '../lib/yoroll';
 import type { VeInstance } from '../platform/tiktok';
 
 export interface MediaHandle { play(): Promise<void>; pause(): void; seek(time: number): void; time(): number; duration(): number; paused(): boolean }
@@ -32,10 +32,14 @@ export const Media = forwardRef<MediaHandle, Props>(function Media(props, ref) {
     void (async () => {
       try {
         if (!window.TTMinis?.getPlayer) throw new Error('TikTok official player is unavailable. Open through the configured TikTok test environment.');
-        const [Ctor, media] = await Promise.all([window.TTMinis.getPlayer('byteplus'), api<{ album_id: string; episode_id: string; vid: string; play_auth_token?: string }>(`/media/${props.nodeId}`)]);
+        const mapUrl = import.meta.env.VITE_TIKTOK_MEDIA_MAP_URL;
+        if (!mapUrl || new URL(mapUrl).protocol !== 'https:') throw new Error('Configure VITE_TIKTOK_MEDIA_MAP_URL with the public HTTPS approved-media mapping.');
+        const [Ctor, mapping] = await Promise.all([window.TTMinis.getPlayer('byteplus'), jsonRequest<Record<string, { album_id: string; episode_id: string; vid: string }>>(mapUrl)]);
+        const media = mapping[props.nodeId];
+        if (!media?.album_id || !media.episode_id || !media.vid) throw new Error('This scene has no approved TikTok media mapping.');
         if (cancelled) return;
         const player = new Ctor({ root: container.current, lang: 'en', vid: media.vid, albumId: media.album_id, episodeId: media.episode_id,
-          ...(media.play_auth_token ? { getVideoByToken: { playAuthToken: media.play_auth_token } } : {}) });
+        });
         platform.current = player;
         player.on(Ctor.Events.READY, () => { if (player.player) { player.player.currentTime = position.current; ready.current = true; } });
         player.on(Ctor.Events.TIME_UPDATE, () => { if (ready.current) callbacks.current.onTime(currentTime(), player.player?.duration ?? 0); });

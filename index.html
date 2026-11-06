@@ -14,14 +14,21 @@
       window.addEventListener('minis-sdk-ready', initializeMinis);
       initializeMinis();
     </script>
-        <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
-  <script>
-    var vConsole = new window.VConsole();
-  </script>
+    <script>
+      const debugScript = document.createElement('script');
+      debugScript.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      debugScript.onload = () => {
+        const initialize = () => { window.eruda.init(); };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
+        else initialize();
+      };
+      debugScript.onerror = () => { console.warn('Eruda could not load. Check access to cdn.jsdelivr.net.'); };
+      document.head.appendChild(debugScript);
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0B0B0D" />
-    <title>The Spooky Doll’s Revenge — yo-chat-mini</title>
+    <title>互动短剧 — yo-chat-mini</title>
   </head>
   <body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
 </html>
