@@ -3,6 +3,50 @@
   <head>
     <script src="https://connect.tiktok-minis.com/drama/sdk.js" onload="window.dispatchEvent(new Event('minis-sdk-ready'))"></script>
     <script>
+      window.__MINI_STARTUP_LOGS__ = [];
+      window.__miniLog = function (stage, details, level) {
+        level = level || 'info';
+        var entry = { stage: stage, time: Date.now(), details: details, level: level };
+        window.__MINI_STARTUP_LOGS__.push(entry);
+        if (window.__MINI_STARTUP_LOGS__.length > 100) window.__MINI_STARTUP_LOGS__.shift();
+        console[level]('[mini-startup] ' + stage, entry);
+      };
+      window.__miniLog('HTML startup', {
+        origin: location.origin, pathname: location.pathname, readyState: document.readyState,
+        userAgent: navigator.userAgent, secureContext: window.isSecureContext,
+        randomUUID: typeof window.crypto !== 'undefined' && typeof window.crypto.randomUUID,
+        abortTimeout: typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout,
+        abortAny: typeof AbortSignal !== 'undefined' && typeof AbortSignal.any,
+        sdkAvailable: !!window.TTMinis
+      });
+      window.addEventListener('error', function (event) {
+        var target = event.target;
+        if (target && target !== window && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+          var resource = (target.src || target.href || '').split(/[?#]/)[0];
+          window.__miniLog('Resource load failed', { tag: target.tagName, resource: resource }, 'error');
+        } else if (event.message) {
+          window.__miniLog('Uncaught error', { message: event.message, file: event.filename, line: event.lineno, column: event.colno, stack: event.error && event.error.stack }, 'error');
+        }
+      }, true);
+      window.addEventListener('unhandledrejection', function (event) {
+        var reason = event.reason;
+        window.__miniLog('Unhandled rejection', { message: reason && reason.message || String(reason), stack: reason && reason.stack }, 'error');
+      });
+      document.addEventListener('DOMContentLoaded', function () {
+        window.__miniLog('DOM ready', { rootPresent: !!document.getElementById('root') });
+      });
+      window.addEventListener('load', function () {
+        window.__miniLog('Window loaded', { rootChildren: document.getElementById('root') && document.getElementById('root').childElementCount });
+      });
+      setTimeout(function () {
+        var root = document.getElementById('root');
+        if (root && !root.childElementCount) {
+          var scripts = Array.prototype.map.call(document.querySelectorAll('script[type="module"][src]'), function (script) { return script.src.split(/[?#]/)[0]; });
+          window.__miniLog('Root still empty after 10s', { readyState: document.readyState, moduleScripts: scripts }, 'error');
+        }
+      }, 10000);
+    </script>
+    <script>
       // The public Client Key is injected at build/dev time. Local mode does not authenticate.
       window.__MINI_CLIENT_KEY__ = "local-preview-only";
       function initializeMinis() {
@@ -16,13 +60,19 @@
     </script>
     <script>
       const debugScript = document.createElement('script');
-      debugScript.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      debugScript.src = 'https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js';
       debugScript.onload = () => {
-        const initialize = () => { window.eruda.init(); };
+        const initialize = () => {
+          window.vConsole = new window.VConsole();
+          window.__MINI_STARTUP_LOGS__.slice().forEach(entry => {
+            console[entry.level]('[mini-startup][replay] ' + entry.stage, entry);
+          });
+          window.__miniLog('vConsole initialized');
+        };
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
         else initialize();
       };
-      debugScript.onerror = () => { console.warn('Eruda could not load. Check access to cdn.jsdelivr.net.'); };
+      debugScript.onerror = () => { console.warn('vConsole could not load. Check access to cdn.jsdelivr.net.'); };
       document.head.appendChild(debugScript);
     </script>
     <meta charset="UTF-8" />

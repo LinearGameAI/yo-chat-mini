@@ -1,3 +1,4 @@
+import { randomUUID } from './uuid.js';
 import type { Catalog, CueMap, Episode, EpisodeProgress, Interval, StoryContext, WatchState } from './types.js';
 
 export class AppError extends Error {
@@ -13,12 +14,12 @@ export function initialProgress(ep: Episode): EpisodeProgress {
 }
 export function initialWatch(catalog: Catalog): WatchState {
   const ep = catalog.episodes[0];
-  return { episodeId: ep.id, playbackId: crypto.randomUUID(), episodes: { [ep.id]: initialProgress(ep) } };
+  return { episodeId: ep.id, playbackId: randomUUID(), episodes: { [ep.id]: initialProgress(ep) } };
 }
 export function selectEpisode(w: WatchState, catalog: Catalog, episodeId: string, restart = false) {
   const ep = episodeOf(catalog, episodeId);
   if (restart || !w.episodes[ep.id] || !ep.graph.nodes.some(n => n.id === w.episodes[ep.id].nodeId)) w.episodes[ep.id] = initialProgress(ep);
-  w.episodeId = ep.id; w.playbackId = crypto.randomUUID(); delete w.lastTick;
+  w.episodeId = ep.id; w.playbackId = randomUUID(); delete w.lastTick;
   return w;
 }
 export function mergeInterval(ranges: Interval[], range: Interval): Interval[] {
@@ -62,7 +63,7 @@ export function advance(w: WatchState, catalog: Catalog, data: { playbackId: str
   if (!next) { p.ended = true; p.pendingInteraction = false; delete w.lastTick; return; }
   if (!ep.graph.nodes.some(n => n.id === next)) throw new AppError(422, 'The published branch has no playable destination.');
   p.nodeId = next; p.position = 0; p.ended = false; p.pendingInteraction = false; p.path.push(next);
-  w.playbackId = crypto.randomUUID(); delete w.lastTick;
+  w.playbackId = randomUUID(); delete w.lastTick;
 }
 export function finishNode(w: WatchState, catalog: Catalog, playbackId: string) {
   if (playbackId !== w.playbackId) throw new AppError(409, 'Playback changed.');

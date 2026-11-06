@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Bootstrap, WatchState } from '../shared/types';
 import { api } from './lib/api';
 import { mainBase } from './lib/yoroll';
+import { startupLog } from './lib/log';
 import { Player } from './components/Player';
 import { Chat } from './components/Chat';
 import { DramaDetail } from './components/DramaDetail';
@@ -15,6 +16,7 @@ export default function App() {
   const params = new URLSearchParams(window.location.search);
   const isHome = page === 'home' && !params.has('drama_id') && !params.has('episode_id') && !params.has('character_id');
   useEffect(() => {
+    startupLog('App mounted', { page, isHome, hasDramaId: params.has('drama_id') });
     const listener = () => setPage(route()); window.addEventListener('hashchange', listener); return () => window.removeEventListener('hashchange', listener);
   }, []);
   useEffect(() => {

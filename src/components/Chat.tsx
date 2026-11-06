@@ -1,3 +1,4 @@
+import { randomUUID } from '../../shared/uuid';
 import { useEffect, useRef, useState } from 'react';
 import type { Bootstrap, Message, StoryContext } from '../../shared/types';
 import { api } from '../lib/api';
@@ -28,7 +29,7 @@ export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; init
   async function send(value = text) {
     const content = value.trim(); if (!content || sending || loading || loadFailed || !loggedIn) return;
     setError(''); setSending(true); setText(''); setPendingText(content); setStream('');
-    const id = retry.current?.text === content ? retry.current.id : crypto.randomUUID(); retry.current = { text: content, id };
+    const id = retry.current?.text === content ? retry.current.id : randomUUID(); retry.current = { text: content, id };
     const controller = new AbortController(); request.current = controller;
     try {
       await sendReply(data.catalog.id, characterId, content, id, setStream, controller.signal);

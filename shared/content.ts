@@ -1,4 +1,5 @@
 import { normalizeNode } from './drama.js';
+import { throwIfAborted, timedSignal } from './abort.js';
 import { parseSrt } from './subtitles.js';
 import { DRAMA_ID, type Catalog, type Snapshot, type CueMap, type DramaList } from './types.js';
 
@@ -26,16 +27,23 @@ export function createContentClient(options: ContentOptions) {
   }
   async function fetchContent<T>(url: string, stage: string, json: boolean, retries = 0): Promise<T> {
     const target = safeAsset(url);
+    const logFeed = stage === 'drama list';
     for (let attempt = 0; ; attempt++) {
+      throwIfAborted(options.signal);
+      const request = timedSignal(options.signal, 12000);
       try {
-        const response = await fetch(target, { signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(12000)]) : AbortSignal.timeout(12000), redirect: 'error',
+        if (logFeed) console.info('[mini-startup] Feed request', { url: target, pageOrigin: typeof window === 'undefined' ? undefined : window.location.origin, language: options.language || 'en-US', attempt });
+        const response = await fetch(target, { signal: request.signal, redirect: 'error',
           headers: { 'Accept-Language': options.language || 'en-US' } });
+        if (logFeed) console.info('[mini-startup] Feed HTTP response', { status: response.status, ok: response.ok, contentType: response.headers.get('content-type'), redirected: response.redirected });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return await (json ? response.json() : response.text()) as T;
       } catch (cause) {
-        options.signal?.throwIfAborted();
+        throwIfAborted(options.signal);
         if (attempt >= retries) throw new Error(`Yoroll ${stage} could not be loaded. Please try again.`, { cause });
         await new Promise(resolve => setTimeout(resolve, 300 * (attempt + 1)));
+      } finally {
+        request.dispose();
       }
     }
   }
