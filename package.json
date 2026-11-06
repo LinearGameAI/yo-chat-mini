@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "tsx watch server/index.ts",
+    "dev:local": "tsx watch server/index.ts --local",
     "start": "NODE_ENV=production node --env-file-if-exists=.env.local dist-server/server/index.js",
     "build": "tsc --noEmit && vite build && tsc -p tsconfig.server.json",
     "build:minis": "npm run build && minis build",

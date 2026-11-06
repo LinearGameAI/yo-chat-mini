@@ -3,7 +3,8 @@ import type { Message, StoryContext } from '../shared/types.js';
 import { readSse } from '../shared/sse.js';
 import { AppError } from './story.js';
 
-export function chatProvider(): 'mock' | 'openai-compatible' {
+export function chatProvider(): 'mock' | 'openai-compatible' | 'yoroll' {
+  if (!process.env.CHAT_PROVIDER || process.env.CHAT_PROVIDER === 'yoroll') return 'yoroll';
   if (process.env.CHAT_PROVIDER === 'openai-compatible') {
     if (!process.env.CHAT_API_KEY || !process.env.CHAT_BASE_URL || !process.env.CHAT_MODEL) throw new Error('CHAT_PROVIDER requires server-side CHAT_API_KEY, CHAT_BASE_URL and CHAT_MODEL.');
     return 'openai-compatible';
@@ -19,6 +20,7 @@ export function mockReply(context: StoryContext, text: string) {
   return `I’m with you at this point in the story. The last words you heard were: “${last}”${choice ? ` You chose “${choice.label}”.` : ''} Which part of that moment do you want to talk about?`;
 }
 export async function* reply(context: StoryContext, history: Message[], text: string, signal: AbortSignal) {
+  if (chatProvider() === 'yoroll') throw new AppError(500, 'Yoroll requires a user conversation.');
   if (chatProvider() === 'mock') {
     const answer = mockReply(context, text);
     for (const token of answer.match(/.{1,5}/gs) ?? []) { await delay(15, undefined, { signal }); yield token; }

@@ -25,7 +25,7 @@ export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; init
     const controller = new AbortController(); request.current = controller;
     try {
       await streamReply(characterId, content, id, (event, payload) => {
-        if (event === 'response.delta') setStream(s => s + payload.text);
+        if (event === 'response.delta') setStream(s => payload.replace ? payload.text : s + payload.text);
       }, controller.signal);
       const result = await api<{ messages: Message[]; context: StoryContext }>(`/chat/${characterId}`); setMessages(result.messages); setContext(result.context);
       setPendingText(''); setStream(''); retry.current = null;

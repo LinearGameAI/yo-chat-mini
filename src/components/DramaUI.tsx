@@ -14,9 +14,10 @@ export function CastList({ catalog, onChat }: { catalog: Catalog; onChat(id: str
 }
 
 export function CastEntry({ catalog, onClick }: { catalog: Catalog; onClick(): void }) {
-  return <button className="cast-entry" onClick={onClick} aria-label={`Chat with ${catalog.characters[0].name.split('|')[0].trim()}`}>
+  if (!catalog.characters.length) return null;
+  return <button className="cast-entry" onClick={onClick} aria-label="和角色聊聊">
     <span className="cast-avatars">{catalog.characters.slice(0, 3).map(c => <img key={c.id} src={c.image} alt="" />)}</span>
-    <span>Chat with Characters</span>
+    <span>和角色聊聊</span>
   </button>;
 }
 
@@ -27,7 +28,7 @@ export function EpisodeCells({ catalog, watch, busy, onSelect, horizontal = fals
     <button key={episode.id} className={`episode-cell ${episode.id === watch.episodeId ? 'selected' : ''}`} aria-label={`Play ${episode.title}`}
       aria-current={episode.id === watch.episodeId ? 'true' : undefined} disabled={busy} onClick={() => onSelect(episode.id)}>
       {index + 1}{episode.id === watch.episodeId && <PlayingBars />}
-    </button>)}</div>;
+    </button>)}{catalog.lockedEpisodes?.map((episode, index) => <button key={episode.id} className="episode-cell locked" disabled aria-label={`${episode.title || `第${catalog.episodes.length + index + 1}集`}，需要解锁`}>{catalog.episodes.length + index + 1}</button>)}</div>;
 }
 
 // The shell retains the App's 18px top corners, drag handle and 16px inset.

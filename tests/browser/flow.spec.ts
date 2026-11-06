@@ -2,10 +2,10 @@ import { expect, test } from '@playwright/test';
 
 test('real story playback → context-limited mock chat → resume, history and chapter restoration', async ({ page }, info) => {
   const browserErrors: string[] = []; page.on('pageerror', e => browserErrors.push(e.message));
-  await page.goto('/');
+  await page.goto('/#detail');
   await expect(page.getByRole('heading', { name: 'The Spooky Doll’s Revenge', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: /Daniel Renault/ })).toBeVisible();
-  await page.screenshot({ path: `verification/${info.project.name}-home.png`, fullPage: true, scale: 'css' });
+  await page.screenshot({ path: info.outputPath('detail.png'), fullPage: true, scale: 'css' });
   await page.getByRole('button', { name: 'Start Watching', exact: true }).click();
   await expect(page.locator('.band-right')).toContainText('Stage 1');
   const video = page.locator('video');
@@ -14,14 +14,15 @@ test('real story playback → context-limited mock chat → resume, history and 
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 25000 }).toBeGreaterThan(9);
   await page.getByRole('button', { name: 'Pause video', exact: true }).click({ force: true });
   const pausedAt = await video.evaluate((v: HTMLVideoElement) => v.currentTime);
-  await page.screenshot({ path: `verification/${info.project.name}-player.png`, scale: 'css' });
+  await page.screenshot({ path: info.outputPath('player.png'), scale: 'css' });
+  await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
   await expect(page.getByText('Mock replies · Local conversation preview', { exact: true })).toBeVisible();
   await page.getByRole('textbox', { name: 'Message Daniel' }).fill('What just happened?');
   await page.getByRole('button', { name: 'Send message', exact: true }).click();
   await expect(page.locator('.message.assistant')).toContainText('last words you heard');
   await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
-  await page.screenshot({ path: `verification/${info.project.name}-chat.png`, scale: 'css' });
+  await page.screenshot({ path: info.outputPath('chat.png'), scale: 'css' });
   await page.reload();
   await expect(page.locator('.message.assistant')).toContainText('last words you heard');
   await page.getByRole('button', { name: 'Return to drama', exact: true }).click();
@@ -29,17 +30,17 @@ test('real story playback → context-limited mock chat → resume, history and 
   // The browser's back/forward gestures must retain the same position too.
   await page.goBack();
   await page.goForward();
-  await expect(page.locator('.player-top')).toContainText('EP01');
+  await expect(page.locator('.player-top')).toContainText('第1集');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(pausedAt - 1);
   await page.getByRole('button', { name: 'Next episode', exact: true }).click();
-  await expect(page.locator('.player-top')).toContainText('EP02');
+  await expect(page.locator('.player-top')).toContainText('第2集');
   await page.getByRole('button', { name: 'Previous episode', exact: true }).click();
-  await expect(page.locator('.player-top')).toContainText('EP01');
+  await expect(page.locator('.player-top')).toContainText('第1集');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(pausedAt - 1);
   await page.getByRole('button', { name: 'Open episodes', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Episodes' })).toBeVisible();
   await expect(page.locator('.episode-grid button')).toHaveCount(10);
-  await page.screenshot({ path: `verification/${info.project.name}-episodes.png`, scale: 'css' });
+  await page.screenshot({ path: info.outputPath('episodes.png'), scale: 'css' });
   await page.getByRole('button', { name: 'Close episodes', exact: true }).click();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(browserErrors).toEqual([]);
@@ -50,7 +51,7 @@ test('saved position survives leaving before the media metadata loads', async ({
   const video = page.locator('video');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState)).toBeGreaterThanOrEqual(1);
   await video.evaluate((v: HTMLVideoElement) => { v.currentTime = 12; });
-  await page.getByRole('button', { name: 'Back to drama', exact: true }).click();
+  await page.getByRole('button', { name: 'The Spooky Doll’s Revenge', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Continue Watching', exact: true })).toBeVisible();
 
   // Hold the media network request while the page itself and API remain available.
@@ -60,6 +61,7 @@ test('saved position survives leaving before the media metadata loads', async ({
   try {
     await page.getByRole('button', { name: 'Continue Watching', exact: true }).click();
     await expect(video).toHaveJSProperty('readyState', 0);
+    await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
     await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
     await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
     const bootstrap = await (await page.request.get('/api/bootstrap')).json();
@@ -79,6 +81,7 @@ test('published branch selection survives chat and page refresh', async ({ page 
   await video.evaluate((v: HTMLVideoElement) => { v.currentTime = v.duration - .3; });
   await page.getByRole('button', { name: 'Play video', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Story choices' })).toBeVisible();
+  await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
   await page.getByRole('button', { name: 'Return to drama', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Story choices' })).toBeVisible();
@@ -86,6 +89,7 @@ test('published branch selection survives chat and page refresh', async ({ page 
   await expect(page.getByRole('region', { name: 'Story choices' })).toBeVisible();
   await page.getByRole('button', { name: '“Why should I?”', exact: true }).click();
   await expect.poll(() => video.getAttribute('src')).toContain('B01');
+  await page.getByRole('button', { name: '和角色聊聊', exact: true }).click();
   await page.getByRole('button', { name: /Chat with Daniel Renault/ }).click();
   await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
   await page.reload();
@@ -93,17 +97,17 @@ test('published branch selection survives chat and page refresh', async ({ page 
   await expect.poll(() => video.getAttribute('src')).toContain('B01');
 });
 
-test('external entry params resolve the real episode and character; other dramas rejected', async ({ page }) => {
+test('external entry params resolve the real episode and character; invalid drama IDs rejected', async ({ page }) => {
   await page.goto('/?drama_id=900a3d4e-6589-4c66-8287-d9bd06937c11&episode_id=dc4e4e08-73aa-4d87-be96-829044919edf&character_id=yt_daniel_renault_married_doll');
   await expect(page.locator('.chat-context')).toContainText('EP02');
   await page.getByRole('button', { name: 'Return to drama', exact: true }).click();
-  await expect(page.locator('.player-top')).toContainText('EP02');
-  await page.goto('/?drama_id=wrong');
-  await expect(page.getByRole('alert')).toContainText('only contains');
+  await expect(page.locator('.player-top')).toContainText('第2集');
+  await page.goto('/?drama_id=bad%2Fid');
+  await expect(page.getByRole('alert')).toContainText('Invalid drama ID');
 });
 
 test('browser back to the entry preserves playback and QTE returns a real branch', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#detail');
   await page.getByRole('button', { name: 'Start Watching', exact: true }).click();
   const video = page.locator('video');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState)).toBeGreaterThanOrEqual(1);
@@ -113,7 +117,7 @@ test('browser back to the entry preserves playback and QTE returns a real branch
   await page.getByRole('button', { name: 'Continue Watching', exact: true }).click();
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(2.7);
   await page.getByRole('button', { name: 'Next episode', exact: true }).click();
-  await expect(page.locator('.player-top')).toContainText('EP02');
+  await expect(page.locator('.player-top')).toContainText('第2集');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.duration)).toBeGreaterThan(1);
   const previous = await video.getAttribute('src');
   await video.evaluate((v: HTMLVideoElement) => { v.currentTime = v.duration - .3; });
@@ -121,5 +125,5 @@ test('browser back to the entry preserves playback and QTE returns a real branch
   await expect(page.getByRole('button', { name: 'Tap now', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Tap now', exact: true }).click();
   await expect.poll(() => video.getAttribute('src')).not.toBe(previous);
-  await expect(page.locator('.player-top')).toContainText('EP02');
+  await expect(page.locator('.player-top')).toContainText('第2集');
 });

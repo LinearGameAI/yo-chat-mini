@@ -4,5 +4,5 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: { baseURL: 'http://localhost:5173', trace: 'retain-on-failure', screenshot: 'only-on-failure', channel: 'chrome' },
   projects: [{ name: 'iPhone', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } }, { name: 'Android', use: { ...devices['Pixel 7'] } }],
-  webServer: { command: 'npm run dev', url: 'http://localhost:5173/api/health', reuseExistingServer: true, timeout: 120000 },
+  webServer: { command: 'npm run dev', env: { CHAT_PROVIDER: 'mock' }, url: 'http://localhost:5173/api/health', reuseExistingServer: false, timeout: 120000 },
 });

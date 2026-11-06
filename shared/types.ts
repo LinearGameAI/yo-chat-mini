@@ -2,11 +2,19 @@ import type { ChapterGraph } from './drama.js';
 import type { SubtitleCue } from './subtitles.js';
 
 export const DRAMA_ID = '900a3d4e-6589-4c66-8287-d9bd06937c11';
+export interface DramaListItem {
+  game_id: string; title: string; cover_image: string; portrait_cover_image?: string;
+  game_engine: 'drama'; display_count: number; tags: string;
+  has_paid_content?: boolean; has_membership_content?: boolean;
+}
+export interface DramaList { items: DramaListItem[]; page: number; page_size: number; total: number }
 export interface Character { id: string; name: string; image: string }
 export interface Episode { id: string; externalId: string; title: string; cover: string; graph: ChapterGraph }
 export interface Catalog {
   id: string; title: string; description: string; cover: string; tags: string[];
   characters: Character[]; episodes: Episode[]; source: 'live' | 'snapshot'; fetchedAt: string;
+  totalEpisodes?: number; finished?: boolean;
+  lockedEpisodes?: { id: string; title: string }[];
 }
 export interface Snapshot {
   fetchedAt: string; sourceUrl: string; detail: Record<string, any>; manifest: Record<string, any>;
@@ -32,10 +40,18 @@ export interface StoryContext {
   seenScenes: { episode_id: string; node_id: string; position: number }[];
 }
 export interface Message { id: string; role: 'user' | 'assistant'; text: string; evidenceIds: string[]; createdAt: string; scope?: { episode_id: string; node_id: string; position: number } }
-export interface Conversation { id: string; characterId: string; messages: Message[] }
-export interface Session { id: string; csrf: string; identity: 'local' | 'tiktok'; userId: string; watch: WatchState; conversations: Record<string, Conversation> }
+export interface Conversation {
+  id: string; characterId: string; messages: Message[];
+  yoroll?: { id: string; baseUrl: string; userId: string; historyIds: string[] };
+}
+export interface Session {
+  id: string; csrf: string; identity: 'local' | 'tiktok'; userId: string; watch: WatchState; conversations: Record<string, Conversation>;
+  dramaId?: string;
+  // Server-only. Populate after the future TikTok/Yoroll exchange, never from client input.
+  yorollAuth?: { accessToken: string; userId: string };
+}
 export interface Bootstrap {
   catalog: Catalog; watch: WatchState; csrf: string;
-  mode: 'local' | 'tiktok'; chatProvider: 'mock' | 'openai-compatible'; authenticated: boolean;
+  mode: 'local' | 'tiktok'; chatProvider: 'mock' | 'openai-compatible' | 'yoroll'; authenticated: boolean;
 }
 export type CueMap = Record<string, SubtitleCue[]>;

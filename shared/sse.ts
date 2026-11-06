@@ -21,7 +21,7 @@ export async function* readSse(body: ReadableStream<Uint8Array>) {
         const end = match.index!; const frame = parseFrame(buffer.slice(0, end));
         buffer = buffer.slice(end + match[0].length); if (frame) yield frame;
       }
-      if (done) break;
+      if (done) { const frame = parseFrame(buffer); if (frame) yield frame; break; }
     }
   } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
 }

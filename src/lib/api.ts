@@ -1,4 +1,6 @@
 import { readSse } from '../../shared/sse';
+import { DRAMA_ID } from '../../shared/types';
+const dramaId = new URLSearchParams(window.location.search).get('drama_id') || DRAMA_ID;
 let csrf = '';
 export function setCsrf(value: string) { csrf = value; }
 const base = import.meta.env.VITE_API_BASE_URL || '';
@@ -9,7 +11,7 @@ export async function api<T>(path: string, body?: unknown, signal?: AbortSignal)
   let response: Response;
   try {
     response = await fetch(url, { method, credentials: 'include', signal,
-      headers: body === undefined ? {} : { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: body === undefined ? undefined : JSON.stringify(body) });
+      headers: { 'X-Drama-Id': dramaId, ...(body === undefined ? {} : { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }) }, body: body === undefined ? undefined : JSON.stringify(body) });
   } catch (error) {
     console.error('[yo-chat-mini] API network failure', { method, url, error });
     throw error;
@@ -26,11 +28,11 @@ export async function api<T>(path: string, body?: unknown, signal?: AbortSignal)
   return data;
 }
 export function keepProgress(body: unknown) {
-  void fetch(`${base}/api/watch/tick`, { method: 'POST', credentials: 'include', keepalive: true, headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(body) }).catch(() => {});
+  void fetch(`${base}/api/watch/tick`, { method: 'POST', credentials: 'include', keepalive: true, headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf, 'X-Drama-Id': dramaId }, body: JSON.stringify(body) }).catch(() => {});
 }
 export async function streamReply(character: string, text: string, clientRequestId: string, onEvent: (event: string, data: any) => void, signal: AbortSignal) {
   const response = await fetch(`${base}/api/chat/${encodeURIComponent(character)}/responses`, { method: 'POST', signal, credentials: 'include',
-    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify({ text, clientRequestId }) });
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf, 'X-Drama-Id': dramaId }, body: JSON.stringify({ text, clientRequestId }) });
   if (!response.ok) throw new Error((await response.json()).error || 'Could not send the message.');
   if (!response.body) throw new Error('Streaming is not supported in this browser.');
   let completed = false;
