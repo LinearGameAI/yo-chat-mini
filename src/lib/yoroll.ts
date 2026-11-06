@@ -1,6 +1,9 @@
+import { randomUUID } from '../../shared/uuid';
+import { throwIfAborted } from '../../shared/abort';
 import type { DramaList, Message } from '../../shared/types';
 import { createContentClient } from '../../shared/content';
 import { createYorollConversation, streamYorollReply } from '../../shared/yoroll';
+import { startupLog } from './log';
 
 export const mainBase = (import.meta.env.VITE_YOROLL_API_BASE_URL || 'https://api.lineargame.ai/api/v1').replace(/\/+$/, '');
 export const chatBase = (import.meta.env.VITE_YOROLL_CHAT_BASE_URL || 'https://chat-api.lineargame.ai/api/v1').replace(/\/+$/, '');
@@ -13,10 +16,12 @@ try {
   if (typeof saved?.token === 'string' && saved.token && typeof saved?.userId === 'string' && saved.userId) auth = saved;
 } catch { /* storage may be disabled */ }
 let deviceId: string;
+startupLog('API module initializing', { mainBase, chatBase, language, randomUUID: typeof window.crypto?.randomUUID });
 try {
-  deviceId = localStorage.getItem('yoroll-mini-device') || crypto.randomUUID();
+  deviceId = localStorage.getItem('yoroll-mini-device') || randomUUID();
   localStorage.setItem('yoroll-mini-device', deviceId);
-} catch { deviceId = crypto.randomUUID(); }
+} catch { deviceId = randomUUID(); }
+startupLog('API module ready');
 export class LoginRequired extends Error {}
 export function isLoggedIn() { return !!auth?.token; }
 export function logout() {
@@ -48,7 +53,7 @@ export async function loginWithEmail(email: string, password: string, signal?: A
   if (!result.token) throw new Error('Yoroll did not return a login token.');
   const me = await jsonRequest<{ id: string }>(`${mainBase}/users/me`, { signal, headers: clientHeaders(result.token) });
   if (!me.id) throw new Error('Yoroll did not return a user identity.');
-  signal?.throwIfAborted();
+  throwIfAborted(signal);
   conversations.clear(); auth = { token: result.token, userId: me.id };
   try { sessionStorage.setItem(authKey, JSON.stringify(auth)); } catch { /* keep login in memory */ }
 }
@@ -74,7 +79,7 @@ async function conversationId(dramaId: string, character: string, signal: AbortS
     const client = chatClient();
     try { id = await createYorollConversation(client, character, signal); }
     catch (error) { handleChatError(error); }
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     if (auth?.token !== client.accessToken) throw new LoginRequired('Your Yoroll account changed. Please reopen the conversation.');
     conversations.set(key, id!);
     try { sessionStorage.setItem(`yoroll-mini-conversation:${key}`, id!); } catch { /* optional persistence */ }

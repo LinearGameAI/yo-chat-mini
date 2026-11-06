@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DramaListItem } from '../../shared/types';
 import { fetchDramas } from '../lib/yoroll';
+import { startupLog, errorDetails } from '../lib/log';
 
 function playCount(count: number) {
   const value = Number.isFinite(count) ? Math.max(0, count) : 0;
@@ -17,6 +18,8 @@ export function DramaList() {
   const request = useRef<AbortController | null>(null);
 
   async function load(nextPage: number) {
+    const started = Date.now();
+    startupLog('Homepage load started', { page: nextPage });
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
@@ -24,17 +27,22 @@ export function DramaList() {
     try {
       const data = await fetchDramas(nextPage, controller.signal);
       if (controller.signal.aborted) return;
+      startupLog('Homepage feed received', { page: data.page, count: data.items.length, total: data.total, elapsedMs: Date.now() - started });
       setItems(previous => [...new Map([...previous, ...data.items].map(item => [item.game_id, item])).values()]);
       setLoaded(previous => previous + data.items.length);
       setPage(data.page); setTotal(data.total);
     } catch (e) {
+      startupLog(controller.signal.aborted ? 'Homepage load aborted' : 'Homepage load failed', { page: nextPage, elapsedMs: Date.now() - started, ...errorDetails(e) }, controller.signal.aborted ? 'info' : 'error');
       if (!controller.signal.aborted) setError((e as Error).message);
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
   }
 
-  useEffect(() => { void load(1); return () => request.current?.abort(); }, []);
+  useEffect(() => { startupLog('Homepage mounted'); void load(1); return () => request.current?.abort(); }, []);
+  useEffect(() => {
+    startupLog('Homepage rendered', { page, cardCount: items.length, total, loading, hasError: !!error });
+  }, [page, items.length, total, loading, error]);
 
   return <main className="drama-list-page">
     <header className="drama-list-header"><h1 className="drama-list-brand">yoroll <span>game</span></h1></header>

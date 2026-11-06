@@ -5,6 +5,20 @@ const chat = 'https://chat-api.lineargame.ai/api/v1';
 const cdn = 'https://drneqli4lopih.cloudfront.net/direct-test';
 const dramaId = 'direct-drama';
 const characterId = 'direct-character';
+// Exercise every direct-client flow against the older WebView API surface.
+test.beforeEach(async ({ page }) => {
+  // The debugger launcher overlaps the mobile send button; transport tests do not exercise it.
+  await page.route('https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js', route => route.fulfill({
+    contentType: 'application/javascript', body: 'window.VConsole = function () {};',
+  }));
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'structuredClone', { value: undefined, configurable: true });
+    Object.defineProperty(window.crypto, 'randomUUID', { value: undefined, configurable: true });
+    Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', { value: undefined, configurable: true });
+    Object.defineProperty(AbortSignal, 'any', { value: undefined, configurable: true });
+    Object.defineProperty(AbortSignal, 'timeout', { value: undefined, configurable: true });
+  });
+});
 function frame(event: string, data: unknown) { return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`; }
 async function story(page: Page) {
   const unexpected: string[] = [];
@@ -36,6 +50,18 @@ async function auth(page: Page, user = 'user-one') {
   await page.getByLabel('Password', { exact: true }).fill('test-password');
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 }
+
+test('homepage renders in WebViews without crypto.randomUUID', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window.crypto, 'randomUUID', { value: undefined, configurable: true });
+  });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.route(`${main}/feed/games?*`, route => route.fulfill({ json: { items: [], page: 1, page_size: 12, total: 0 } }));
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'yoroll game' })).toBeVisible({ timeout: 3000 });
+  expect(errors).toEqual([]);
+});
 
 test('homepage calls the production feed directly and preserves pagination on retry', async ({ page }) => {
   let secondAttempts = 0;

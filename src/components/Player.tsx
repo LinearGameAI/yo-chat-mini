@@ -22,9 +22,6 @@ function orderedStageNodes(graph: ChapterGraph) {
 export const timestamp = (n: number) => `${Math.floor((n || 0) / 60)}:${String(Math.floor((n || 0) % 60)).padStart(2, '0')}`;
 export function Player({ data, onWatch, onChat, onHome, onDetail }: { data: Bootstrap; onWatch(w: WatchState): void; onChat(): void; onHome(): void; onDetail(): void }) {
   const { catalog, watch, mode } = data; const ep = catalog.episodes.find(e => e.id === watch.episodeId)!;
-  useEffect(()=>{
-    console.log('ep-----', ep)
-  }, [ep])
   const progress = watch.episodes[ep.id]; const node = ep.graph.nodes.find(n => n.id === progress.nodeId)!;
   const media = useRef<MediaHandle>(null); const [time, setTime] = useState(progress.position); const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false); const [ended, setEnded] = useState(progress.ended || !!progress.pendingInteraction);
@@ -108,7 +105,8 @@ export function Player({ data, onWatch, onChat, onHome, onDetail }: { data: Boot
       <button className="player-title" onClick={() => void navigate(onDetail)}><h1>{catalog.title}</h1><Icon name="next" size={15} /></button>
       {catalog.characters.length > 0 && <div className="player-cast" title={hint ? 'Talk about the moment you just watched' : undefined}><CastEntry catalog={catalog} onClick={() => void navigate(onChat)} /></div>}
     </div>
-    <button className="episodes-bar" aria-label="Open episodes" onClick={() => { media.current?.pause(); setChapters(true); }}><img src={ep.cover || catalog.cover} alt="" /><span>选集 · {catalog.finished === false ? '更新中' : '已完结'} · 共{catalog.totalEpisodes ?? catalog.episodes.length}集</span><Icon name="next" size={16} /></button>
+    <button className="episodes-bar" aria-label="Open episodes" onClick={() => { media.current?.pause(); setChapters(true); }}>
+      <img src={catalog.cover || ep.cover} alt="" /><span>选集 · {catalog.finished === false ? '更新中' : '已完结'} · 共{catalog.totalEpisodes ?? catalog.episodes.length}集</span><Icon name="next" size={16} /></button>
     <div className="seek-line" style={{ '--played': `${duration ? Math.min(100, time / duration * 100) : 0}%` } as CSSProperties}>
       <input aria-label="Playback position" type="range" min="0" max={duration || 1} step="0.1" value={Math.min(time, duration || 1)} onChange={e => { media.current?.seek(Number(e.target.value)); setTime(Number(e.target.value)); void sync().catch(() => {}); }} />
       <span className="seek-time">{timestamp(time)} / {timestamp(duration)}</span>
