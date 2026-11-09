@@ -176,3 +176,59 @@ test('failed partial stream can retry the same idempotency key', async ({ page }
   await expect(page.locator('.message.assistant')).toHaveText('Recovered');
   expect(ids).toHaveLength(2); expect(ids[0]).toBe(ids[1]);
 });
+
+test('TikTok Minis uses unified login, rotates platform tokens, chats and revokes its session', async ({ page }) => {
+  const unexpected = await story(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(window, '__MINI_CLIENT_KEY__', { configurable: true, get: () => 'test-minis-app', set: () => {} });
+    (window as any).__isMinisDevMode__ = true;
+    window.TTMinis = {
+      init() {}, login(callback: any) { callback({ authResponse: { code: 'sdk-one-time-code' } }); },
+      on() { return 'listener'; }, off() {}, async getPlayer() { throw new Error('Player not used by chat test'); },
+    };
+    window.__MINI_SDK_INITIALIZED__ = true;
+  });
+  await page.route('https://connect.tiktok-minis.com/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
+  let logins = 0, refreshes = 0, revoked = false, replied = false;
+  await page.route(`${main}/users/oauth/tiktok/login`, route => {
+    logins++; expect(route.request().postDataJSON()).toEqual({ code: 'sdk-one-time-code' });
+    return route.fulfill({ json: { token: 'platform-initial', refresh_token: 'refresh-initial', expires_at: new Date(Date.now() + 5000).toISOString() } });
+  });
+  await page.route(`${main}/users/me`, route => {
+    expect(route.request().headers().authorization).toBe('Bearer platform-initial');
+    return route.fulfill({ json: { id: 'unified-tiktok-user', email: '' } });
+  });
+  await page.route(`${main}/users/token/refresh`, route => {
+    refreshes++; expect(route.request().postDataJSON()).toEqual({ refresh_token: 'refresh-initial' });
+    return route.fulfill({ json: { token: 'platform-rotated', refresh_token: 'refresh-rotated', expires_at: new Date(Date.now() + 3600000).toISOString() } });
+  });
+  await page.route(`${chat}/companions/${characterId}/conversations`, route => {
+    expect(route.request().headers().authorization).toBe('Bearer platform-rotated');
+    return route.fulfill({ json: { conversation: { id: 'tiktok-platform-conversation' } } });
+  });
+  await page.route(`${chat}/conversations/tiktok-platform-conversation/messages?*`, route => route.fulfill({ json: {
+    messages: replied ? [{ id: 'tiktok-reply', role: 'assistant', text: 'Welcome from unified chat' }] : [],
+  } }));
+  await page.route(`${chat}/conversations/tiktok-platform-conversation/responses`, route => {
+    expect(route.request().headers().authorization).toBe('Bearer platform-rotated'); replied = true;
+    return route.fulfill({ contentType: 'text/event-stream', body: frame('response.completed', {
+      userMessage: { id: 'tiktok-question', text: 'Hello' }, replyMessage: { id: 'tiktok-reply', text: 'Welcome from unified chat' },
+    }) });
+  });
+  await page.route(`${main}/users/logout`, route => {
+    expect(route.request().headers().authorization).toBe('Bearer platform-rotated'); revoked = true;
+    return route.fulfill({ status: 204 });
+  });
+  await page.goto(`/?drama_id=${dramaId}#chat`);
+  await expect(page.getByRole('heading', { name: 'Continue with TikTok' })).toBeVisible();
+  await expect(page.getByLabel('Email', { exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Message Daniel' })).toBeEnabled();
+  await page.getByRole('textbox', { name: 'Message Daniel' }).fill('Hello');
+  await page.getByRole('button', { name: 'Send message', exact: true }).click();
+  await expect(page.getByText('Welcome from unified chat', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await expect.poll(() => revoked).toBe(true);
+  await expect(page.getByRole('heading', { name: 'Continue with TikTok' })).toBeVisible();
+  expect(logins).toBe(1); expect(refreshes).toBe(1); expect(unexpected).toEqual([]);
+});

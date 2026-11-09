@@ -6,6 +6,6 @@ export default defineConfig({
   webServer: {
     command: 'node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5187 --strictPort',
     url: 'http://localhost:5187', reuseExistingServer: false,
-    env: { TIKTOK_CLIENT_KEY: 'local-preview-only', VITE_TIKTOK_CLIENT_KEY: 'local-preview-only' },
+    env: { TIKTOK_CLIENT_KEY: 'local-preview-only', VITE_TIKTOK_CLIENT_KEY: 'local-preview-only', VITE_SENTRY_DSN: '' },
   },
 });

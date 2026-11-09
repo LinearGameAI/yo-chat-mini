@@ -4,13 +4,17 @@ import type { DramaList, Message } from '../../shared/types';
 import { createContentClient } from '../../shared/content';
 import { createYorollConversation, streamYorollReply } from '../../shared/yoroll';
 import { startupLog } from './log';
+import { loginTikTok } from '../platform/tiktok';
+import { loginTikTokPlatform, platformTokens, refreshPlatform, platformRequest, PlatformAuthError, type PlatformTokens } from '../../shared/platform-auth';
 
 export const mainBase = (import.meta.env.VITE_YOROLL_API_BASE_URL || 'https://api.lineargame.ai/api/v1').replace(/\/+$/, '');
 export const chatBase = (import.meta.env.VITE_YOROLL_CHAT_BASE_URL || 'https://chat-api.lineargame.ai/api/v1').replace(/\/+$/, '');
 export const language = import.meta.env.VITE_YOROLL_CONTENT_LANGUAGE || 'en-US';
 const authKey = `yoroll-mini-auth:${mainBase}`;
-interface Auth { token: string; userId: string }
+interface Auth extends PlatformTokens { userId: string }
 let auth: Auth | undefined;
+let authRevision = 0;
+let refreshPromise: Promise<void> | undefined;
 try {
   const saved = JSON.parse(sessionStorage.getItem(authKey) || 'null');
   if (typeof saved?.token === 'string' && saved.token && typeof saved?.userId === 'string' && saved.userId) auth = saved;
@@ -25,7 +29,7 @@ startupLog('API module ready');
 export class LoginRequired extends Error {}
 export function isLoggedIn() { return !!auth?.token; }
 export function logout() {
-  auth = undefined; conversations.clear();
+  authRevision++; refreshPromise = undefined; auth = undefined; conversations.clear();
   try { sessionStorage.removeItem(authKey); } catch { /* optional persistence */ }
 }
 export function clientHeaders(token?: string): Record<string, string> {
@@ -45,8 +49,51 @@ export async function jsonRequest<T>(url: string, options: RequestInit = {}): Pr
   }
   return data as T;
 }
+function saveAuth(value: Auth) {
+  auth = value;
+  try { sessionStorage.setItem(authKey, JSON.stringify(auth)); } catch { /* optional persistence */ }
+}
+export async function loginWithTikTok(signal?: AbortSignal) {
+  const revision = ++authRevision;
+  const code = await loginTikTok();
+  throwIfAborted(signal);
+  const value = await loginTikTokPlatform(mainBase, code, clientHeaders(), signal);
+  if (revision !== authRevision) throw new LoginRequired('Your account changed. Please sign in again.');
+  conversations.clear(); saveAuth(value);
+}
+export async function logoutFromPlatform() {
+  const token = auth?.token; logout();
+  if (!token) return;
+  try { await platformRequest(mainBase, 'users/logout', { method: 'POST', headers: clientHeaders(token) }); }
+  catch (error) { if (!(error instanceof PlatformAuthError && error.status === 401)) throw error; }
+}
+async function refreshAuth() {
+  if (!auth?.refreshToken) { logout(); throw new LoginRequired('Your login has expired. Please sign in again.'); }
+  if (refreshPromise) return refreshPromise;
+  const current = auth; const revision = authRevision;
+  const pending = (async () => {
+    try {
+      const tokens = await refreshPlatform(mainBase, current.refreshToken!, clientHeaders());
+      if (revision !== authRevision || auth !== current) throw new LoginRequired('Your account changed. Please sign in again.');
+      saveAuth({ ...current, ...tokens });
+    } catch (error) {
+      if (revision === authRevision && error instanceof PlatformAuthError && [400, 401, 403].includes(error.status)) {
+        logout(); throw new LoginRequired('Your login has expired. Please sign in again.');
+      }
+      throw error;
+    }
+  })();
+  refreshPromise = pending;
+  try { await pending; } finally { if (refreshPromise === pending) refreshPromise = undefined; }
+}
+async function readyAuth(signal?: AbortSignal) {
+  throwIfAborted(signal);
+  if (auth?.expiresAt && Date.parse(auth.expiresAt) <= Date.now() + 30000 && auth.refreshToken) await refreshAuth();
+  throwIfAborted(signal);
+}
 export async function loginWithEmail(email: string, password: string, signal?: AbortSignal) {
-  const result = await jsonRequest<{ token: string }>(`${mainBase}/users/login`, {
+  const revision = ++authRevision;
+  const result = await jsonRequest<{ token: string; refresh_token?: string; expires_at?: string }>(`${mainBase}/users/login`, {
     method: 'POST', signal, headers: { ...clientHeaders(), 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
@@ -54,12 +101,13 @@ export async function loginWithEmail(email: string, password: string, signal?: A
   const me = await jsonRequest<{ id: string }>(`${mainBase}/users/me`, { signal, headers: clientHeaders(result.token) });
   if (!me.id) throw new Error('Yoroll did not return a user identity.');
   throwIfAborted(signal);
-  conversations.clear(); auth = { token: result.token, userId: me.id };
-  try { sessionStorage.setItem(authKey, JSON.stringify(auth)); } catch { /* keep login in memory */ }
+  if (revision !== authRevision) throw new LoginRequired('Your account changed. Please sign in again.');
+  conversations.clear(); saveAuth({ ...platformTokens(result), userId: me.id });
 }
 export function contentClient(signal?: AbortSignal) { return createContentClient({ baseUrl: mainBase, language, signal }); }
 export function fetchDramas(page: number, signal?: AbortSignal): Promise<DramaList> { return contentClient(signal).loadDramaList(page); }
-function chatClient() {
+async function chatClient(signal?: AbortSignal) {
+  await readyAuth(signal);
   if (!auth?.token) throw new LoginRequired('Sign in to Yoroll to chat.');
   return { baseUrl: chatBase, accessToken: auth.token, deviceId, language };
 }
@@ -76,7 +124,7 @@ async function conversationId(dramaId: string, character: string, signal: AbortS
     if (id) conversations.set(key, id);
   }
   if (!id) {
-    const client = chatClient();
+    const client = await chatClient(signal);
     try { id = await createYorollConversation(client, character, signal); }
     catch (error) { handleChatError(error); }
     throwIfAborted(signal);
@@ -92,7 +140,7 @@ function handleChatError(error: unknown): never {
 }
 export async function loadConversation(dramaId: string, character: string, signal: AbortSignal): Promise<Message[]> {
   const id = await conversationId(dramaId, character, signal);
-  const client = chatClient();
+  const client = await chatClient(signal);
   const data = await jsonRequest<{ messages: { id: string; text: string; role: string; isFromUser?: boolean; date?: number; blocks?: { type: string; text?: string }[] }[] }>(
     `${chatBase}/conversations/${encodeURIComponent(id)}/messages?limit=100`, { signal, headers: clientHeaders(client.accessToken) });
   if (!Array.isArray(data.messages)) throw new Error('Yoroll returned invalid conversation messages.');
@@ -104,6 +152,6 @@ export async function sendReply(dramaId: string, character: string, text: string
   onText: (text: string) => void, signal: AbortSignal) {
   try {
     const id = await conversationId(dramaId, character, signal);
-    for await (const snapshot of streamYorollReply(chatClient(), id, { text, clientRequestId }, signal)) onText(snapshot);
+    for await (const snapshot of streamYorollReply(await chatClient(signal), id, { text, clientRequestId }, signal)) onText(snapshot);
   } catch (error) { handleChatError(error); }
 }

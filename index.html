@@ -58,7 +58,22 @@
       window.addEventListener('minis-sdk-ready', initializeMinis);
       initializeMinis();
     </script>
-    <script>
+    <script id="mini-debugger">
+      (function () {
+      var stage = "__MINI_BUILD_STAGE__";
+      var hasBridge = !!(
+        window.JS2NativeBridge && (typeof window.JS2NativeBridge._invokeMethod === 'function' || typeof window.JS2NativeBridge.call === 'function') ||
+        window.ToutiaoJSBridge && typeof window.ToutiaoJSBridge.invokeMethod === 'function' ||
+        window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.callMethodParams && typeof window.webkit.messageHandlers.callMethodParams.postMessage === 'function' ||
+        typeof window.callMethodParams === 'function' ||
+        window.__globalprops && typeof window.__globalprops.getGlobalProps === 'function'
+      );
+      var isMinis = /(^|\.)tiktok-minis\.us$/i.test(location.hostname) || hasBridge ||
+        window.__isMinisDevMode__ === true || /TikTok|BytedanceWebview|musical_ly|AppVersion\//i.test(navigator.userAgent);
+      var allowed = !isMinis || stage === 'development' || stage === 'preview';
+      window.__MINI_DEBUG_ALLOWED__ = allowed;
+      window.__miniLog('Debugger policy', { runtime: isMinis ? 'minis' : 'h5', buildStage: stage, allowed: allowed });
+      if (!allowed) return;
       const debugScript = document.createElement('script');
       debugScript.src = 'https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js';
       debugScript.onload = () => {
@@ -74,6 +89,7 @@
       };
       debugScript.onerror = () => { console.warn('vConsole could not load. Check access to cdn.jsdelivr.net.'); };
       document.head.appendChild(debugScript);
+      })();
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

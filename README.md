@@ -1,4 +1,20 @@
+## TikTok 统一 OAuth 配置
+
+LGPlatform 配置 `TIKTOK_CLIENT_KEY`、`TIKTOK_CLIENT_SECRET`；前端仅配置公开的 `VITE_TIKTOK_CLIENT_KEY`，并让 `VITE_YOROLL_API_BASE_URL`、`VITE_YOROLL_CHAT_BASE_URL` 指向同一环境。平台与聊天后端都要允许实际 Minis 前端 origin。先部署 LGPlatform（自动新增 `users.tiktok_id`、`auth_sessions.authentication_provider`），再部署聊天端并重建前端。聊天端的 `TIKTOK_FREE_TEXT_CHAT_ENABLED=true` 只给平台验证的 TikTok 会话开放免费文字聊天，不能通过请求头伪造；语音、媒体仍使用原计费。
+
 # yo-chat-mini
+
+## Sentry 错误监控
+
+前端已接入 `lineargameai/yo-chat-mini`，默认 DSN 已包含在构建中，无需新增必填的 Vercel 变量。仅发送 JS 错误、未处理的 Promise 异常、React 错误和显式捕获的启动／首页加载异常；不会上传 console 日志、会话统计、性能追踪、录屏或指标。用户信息、请求头、Cookie、请求体和 URL 查询参数的自动采集已关闭，发送前还会移除请求、用户、面包屑及额外数据。
+
+可用 `VITE_SENTRY_DSN` 覆盖接收地址，显式设为空值可关闭采集；省略该变量则使用内置 DSN。`VITE_SENTRY_ENVIRONMENT` 可覆盖环境，默认依次采用 `VITE_MINIS_STAGE`、Vercel 环境、development/production。`VITE_SENTRY_RELEASE` 可覆盖发布版本，默认采用项目名与 Vercel Git commit SHA；非 Vercel 构建使用 package.json 的版本号。环境变量在构建时生效，修改后重新部署／上传静态包。
+
+TikTok Minis 需要在可信请求域名中允许 `https://o4512322216984576.ingest.us.sentry.io`，否则客户端错误无法发出。当前接入仅覆盖浏览器／Minis 前端，保留的 Express 服务端没有接入 Sentry。
+
+当前未上传生产 source maps，生产错误会显示压缩后的 JS 文件行列。若需要映射到原始 TypeScript 源码，还需单独配置 source map 上传及构建用的 Sentry token；token 不得使用 `VITE_` 前缀。已通过真实应用启动异常验证 Sentry 收到事件，验证环境为 `verification`。
+
+执行 `node node_modules/@playwright/test/cli.js test --config playwright.sentry.config.ts` 可运行采集范围测试；该测试拦截上传请求，不向实际 Sentry 项目写入测试数据。
 
 ## 静态客户端直连（2026-11-06）
 
@@ -24,7 +40,7 @@ TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VI
 - 详情、播放、字幕和聊天 API 通过 `X-Drama-Id` 选择短剧，未传时沿用默认示例剧。每部剧的内容缓存、会话 cookie、观看进度和聊天记录独立，TikTok 登录恢复也按用户和短剧区分。
 - 视频页保留返回、暂停/播放、进度条、选集、剧情选项和阶段信息；没有字幕/倍速控制、点赞、收藏、转发或全屏按钮。字幕内容本身继续显示。
 - 当前没有会员/积分授权对接，只加载 `chapterLock.fromChapter` 之前的免费章节，锁定章节仅显示禁用项；没有免费章节时提示并允许返回首页。角色聊天仍受下文所述 Yoroll 用户凭证接入限制。
-- 手机调试浮层使用 vConsole，通过外部脚本加载并直接初始化，不受 URL 参数限制。
+- 手机调试浮层使用 vConsole：H5 页面显示；TikTok Minis 仅在 `VITE_MINIS_STAGE=development` 或 `preview` 的构建中显示，`production` 及未识别阶段不加载调试脚本。开发服务器默认 development，构建默认 production。URL 参数不会开启正式包的面板。上传非正式测试包前设置 `VITE_MINIS_STAGE=preview` 并构建；测试包转正式发布前必须改为 production 重新构建，不能直接沿用测试包。
 
 TikTok Mini Drama 独立 Web 项目，支持观看 **The Spooky Doll’s Revenge** 并与剧中角色聊天。本地目录 `yo-chat-mini/` 与 `YorollApp/` 同级。前端使用 React、TypeScript 和 Vite，后端使用 Express 和 SQLite，需要 Node 24 及以上。
 
@@ -56,7 +72,7 @@ npm ci
 npm run dev:local
 ```
 
-打开 **http://localhost:5173**。一个命令同时启动页面和 API；本地观看无需登录。聊天默认使用 Yoroll，需要用户级 Yoroll 凭证（TikTok 换凭证接口待后端提供）。已构建版本可用 `npm start` 启动；两个命令使用同一端口，不应同时运行。
+打开 **http://localhost:5173**。一个命令同时启动页面和 API；本地观看无需登录。聊天默认使用 Yoroll，需要用户级 Yoroll 凭证（TikTok 容器通过统一 OAuth 登录）。已构建版本可用 `npm start` 启动；两个命令使用同一端口，不应同时运行。
 
 `npm run dev:local` 在本地开发时强制使用 local 会话，跳过 `TTMinis.login` 并使用原始视频 URL，即使启动环境中已有 `APP_MODE=tiktok` 也可调试网页。`npm run dev` 按 `APP_MODE` 启动；真机联调仍使用 `npm run dev:minis`。切换模式前先停止占用 5173 端口的旧服务。
 
@@ -100,9 +116,9 @@ CHAT_MODEL=
 
 远端会话 ID 保存在当前用户的本地会话记录中，重试复用会话及幂等键；回看或切换分支导致可见历史变化时创建新的远端会话，防止继续使用已隐藏的远端历史。
 
-**鉴权接入点**：`server/yoroll.ts` 的 `requireYorollAuth(session)` 读取服务端会话中的 `yorollAuth: { accessToken, userId }`。后续在 `/api/auth/tiktok` 中调用后端正式提供的换凭证接口，确认用户身份后写入该字段并持久化；当前未猜测换码 URL、返回字段或刷新协议，TikTok token 不能直接作为 Yoroll Bearer token。凭证不通过聊天请求体、环境共享账号或 bootstrap 下发。当前缺凭证时返回明确的 503，不能视为真实聊天已联调完成。
+**统一登录接入**：TikTok 容器中的聊天登录调用 `TTMinis.login()`，把一次性 code 提交到 LGPlatform `POST /api/v1/users/oauth/tiktok/login`。返回平台 `token`、`refresh_token`、`expires_at` 后，通过 `/users/me` 确认平台用户 UUID，沿用原聊天 API。前端会在到期前刷新平台 token，登出调用 `POST /users/logout` 撤销当前会话。普通浏览器保留邮箱登录。旧 Node adapter 同样使用此统一换码接口，不再自行交换 TikTok token 或建立另一套业务身份。
 
-现有 Yoroll 创建/发送接口没有可信剧情上下文字段，本次不新增未经后端确认的参数、不写 pinned memory。已看上下文及本地消息过滤仍保留，但 Yoroll 使用其自身角色设定和远端历史，**不能保证生成不剧透**。可信上下文约束、鉴权刷新和真实模型效果需后续后端协议及联调确认。
+现有 Yoroll 创建/发送接口没有可信剧情上下文字段，本次不新增未经后端确认的参数、不写 pinned memory。已看上下文及本地消息过滤仍保留，但 Yoroll 使用其自身角色设定和远端历史，**不能保证生成不剧透**。可信上下文约束和真实模型效果仍需后续协议及联调确认。
 
 可选真实模型由独立服务调用 OpenAI-compatible `chat/completions`，在 `.env.local` 配置：
 
@@ -139,7 +155,7 @@ npm run dev:minis
 3. BytePlus / TikTok 审核并上架的媒体，按源节点配置实际 `album_id` / `episode_id` / `vid`。`config/tiktok-media.example.json` 仅提供结构；通过服务端 `TIKTOK_MEDIA_MAP_FILE` 指定真实映射文件。旧客户端需要短期播放凭证时，应接入官方凭证签发服务；不能长期复用过期 token。
 4. 在 iOS / Android TikTok 实际验证登录、官方播放器、键盘、返回、前后台和流式网络。现有视频 URL 只用于本地播放，不能替代平台媒体审核和播放器限制。
 
-SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login(callback)`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。启动时，只有 `/api/bootstrap` 返回 `mode: 'tiktok'` 且 `authenticated: false` 才调用登录；前端从回调的 `authResponse.code` 取码，提交到 `/api/auth/tiktok` 由服务端换取凭证并建立会话。已有会话或 local 模式会跳过 SDK 登录。Client Secret 和业务 Token 不写入前端。平台能力缺配置时明确失败，不退回原始视频 URL。
+SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login(callback)`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。进入聊天后，TikTok 容器显示 TikTok 登录入口，普通浏览器显示邮箱登录入口。SDK code 只提交给统一认证服务；Client Secret 仅配置在 LGPlatform，平台 token 用于聊天请求，不通过 bootstrap 暴露。真实设备验收需要正确的应用配置和新鲜 SDK code。
 
 外部入口参数支持 `drama_id`、`episode_id`（本地章号或真实 externalId）、`character_id`；章节和角色必须关联所选短剧。例如 `/?drama_id=900a3d4e-6589-4c66-8287-d9bd06937c11&episode_id=1&character_id=yt_daniel_renault_married_doll`。
 

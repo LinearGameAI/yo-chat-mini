@@ -2,7 +2,7 @@ import { randomUUID } from '../../shared/uuid';
 import { useEffect, useRef, useState } from 'react';
 import type { Bootstrap, Message, StoryContext } from '../../shared/types';
 import { api } from '../lib/api';
-import { isLoggedIn, loadConversation, loginWithEmail, LoginRequired, logout, sendReply } from '../lib/yoroll';
+import { isLoggedIn, loadConversation, loginWithEmail, loginWithTikTok, LoginRequired, logoutFromPlatform, sendReply } from '../lib/yoroll';
 import { Icon } from './Icon';
 
 export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; initialCharacter?: string; onBack(): void }) {
@@ -43,7 +43,7 @@ export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; init
   async function signIn() {
     setSigningIn(true); setError('');
     const controller = new AbortController(); request.current = controller;
-    try { await loginWithEmail(email.trim(), password, controller.signal); setPassword(''); setLoggedIn(true); }
+    try { if (data.mode === 'tiktok') await loginWithTikTok(controller.signal); else await loginWithEmail(email.trim(), password, controller.signal); if (!controller.signal.aborted) { setPassword(''); setLoggedIn(true); } }
     catch (e) { if (!controller.signal.aborted) setError((e as Error).message); }
     finally { setSigningIn(false); }
   }
@@ -54,9 +54,11 @@ export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; init
     </header>
     {data.catalog.characters.length > 1 && <select aria-label="Choose a character" value={characterId} disabled={sending} onChange={e => setCharacterId(e.target.value)}>{data.catalog.characters.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select>}
     {!loggedIn && <form className="chat-login" onSubmit={e => { e.preventDefault(); void signIn(); }}>
-      <h2>Sign in to Yoroll</h2><p>Use your Yoroll account to chat with this character.</p>
+      <h2>{data.mode === 'tiktok' ? 'Continue with TikTok' : 'Sign in to Yoroll'}</h2><p>{data.mode === 'tiktok' ? 'Use your TikTok account to chat with this character.' : 'Use your Yoroll account to chat with this character.'}</p>
+      {data.mode !== 'tiktok' && <>
       <label>Email<input type="email" autoComplete="username" required value={email} disabled={signingIn} onChange={e => setEmail(e.target.value)} /></label>
       <label>Password<input type="password" autoComplete="current-password" required value={password} disabled={signingIn} onChange={e => setPassword(e.target.value)} /></label>
+      </>}
       <button className="primary" type="submit" disabled={signingIn}>{signingIn ? 'Signing in…' : 'Sign in'}</button>
     </form>}
     <div className={`chat-scroll ${messages.length || pendingText ? 'has-messages' : ''}`} role="log" aria-label="Chat messages" aria-live="polite"><div className="chat-messages">
@@ -68,7 +70,7 @@ export function Chat({ data, initialCharacter, onBack }: { data: Bootstrap; init
       <div ref={end} /></div>
     </div>
     <footer className="chat-footer">{error && <div className="error" role="alert">{error}{loggedIn && <button onClick={() => loadFailed ? setRevision(n => n + 1) : void send()} disabled={sending}>Retry</button>}</div>}
-      {loggedIn && <button className="chat-signout" disabled={sending} onClick={() => { logout(); setLoggedIn(false); setMessages([]); setText(''); }}>Sign out</button>}
+      {loggedIn && <button className="chat-signout" disabled={sending} onClick={() => { void logoutFromPlatform().catch(e => setError(e.message)); setLoggedIn(false); setMessages([]); setText(''); }}>Sign out</button>}
       <p className="mode-notice">{data.chatProvider === 'mock' ? 'Mock replies · Local conversation preview' : 'AI character · Replies may be inaccurate'}</p>
       {loggedIn && !loadFailed && !loading && !messages.length && !pendingText && <div className="suggestions">{['What just happened?', 'Can we talk about this moment?'].map(s => <button key={s} disabled={sending} onClick={() => void send(s)}>{s}</button>)}</div>}
       <form className="composer" onSubmit={e => { e.preventDefault(); void send(); }}><div className="input-shell"><textarea ref={input} aria-label={`Message ${character.name.split(' ')[0]}`} placeholder="Send a message…" maxLength={2000} rows={1} value={text} disabled={!loggedIn || loadFailed || sending || loading} onChange={e => setText(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }} /></div><button type="submit" className="send-button" aria-label="Send message" disabled={!loggedIn || loadFailed || !text.trim() || sending || loading}><Icon name="send" size={18} /></button></form>

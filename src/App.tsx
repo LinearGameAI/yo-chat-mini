@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Bootstrap, WatchState } from '../shared/types';
 import { api } from './lib/api';
 import { mainBase } from './lib/yoroll';
+import { reportException } from './lib/sentry';
 import { startupLog } from './lib/log';
 import { Player } from './components/Player';
 import { Chat } from './components/Chat';
@@ -35,6 +36,7 @@ export default function App() {
         if (!controller.signal.aborted) setData(result);
       } catch (e) {
         if (!controller.signal.aborted) {
+          reportException(e, 'app-bootstrap');
           console.error('[yo-chat-mini] App startup failed', { stage, apiBase: mainBase, pageOrigin: window.location.origin, error: e });
           setError((e as Error).message);
         }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { DramaListItem } from '../../shared/types';
 import { fetchDramas } from '../lib/yoroll';
 import { startupLog, errorDetails } from '../lib/log';
+import { reportException } from '../lib/sentry';
 
 function playCount(count: number) {
   const value = Number.isFinite(count) ? Math.max(0, count) : 0;
@@ -33,7 +34,7 @@ export function DramaList() {
       setPage(data.page); setTotal(data.total);
     } catch (e) {
       startupLog(controller.signal.aborted ? 'Homepage load aborted' : 'Homepage load failed', { page: nextPage, elapsedMs: Date.now() - started, ...errorDetails(e) }, controller.signal.aborted ? 'info' : 'error');
-      if (!controller.signal.aborted) setError((e as Error).message);
+      if (!controller.signal.aborted) { reportException(e, 'homepage-feed'); setError((e as Error).message); }
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
