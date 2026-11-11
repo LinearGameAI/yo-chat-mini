@@ -6,7 +6,8 @@ import express, { type Request, type Response, type NextFunction } from 'express
 import { z } from 'zod';
 import { ContentAccessError, loadContent, loadDramaList } from './content.js';
 import { AppError, advance, finishNode, selectEpisode, storyContext, tick, visibleMessages } from './story.js';
-import { acquireReplyLock, findSession, loginSession, mapTikTokIdentity, newSession, releaseReplyLock, saveConversation, updateWatch } from './store.js';
+import { acquireReplyLock, findSession, loginSession, newSession, releaseReplyLock, saveConversation, saveSession, updateWatch } from './store.js';
+import { loginTikTokPlatform } from '../shared/platform-auth.js';
 import { chatProvider, reply } from './chat.js';
 import { createYorollConversation, requireYorollAuth, streamYorollReply } from './yoroll.js';
 import { DRAMA_ID, type Session, type Message, type Conversation, type Catalog, type CueMap } from '../shared/types.js';
@@ -92,14 +93,11 @@ app.post('/api/auth/tiktok', async (req, res) => {
   const { catalog } = res.locals;
   if (mode !== 'tiktok') throw new AppError(400, 'TikTok login is disabled in local mode.');
   const { code } = z.object({ code: z.string().min(1).max(2048) }).strict().parse(req.body);
-  const clientKey = process.env.TIKTOK_CLIENT_KEY; const secret = process.env.TIKTOK_CLIENT_SECRET;
-  if (!clientKey || !secret) throw new AppError(503, 'Server TikTok credentials are not configured.');
-  const result = await fetch('https://open.tiktokapis.com/v2/oauth/token/', { method: 'POST', signal: AbortSignal.timeout(15000),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_key: clientKey, client_secret: secret, code, grant_type: 'authorization_code' }) });
-  const data = await result.json();
-  if (!result.ok || typeof data.open_id !== 'string' || !data.access_token) throw new AppError(401, 'TikTok could not verify this login.');
-  // Never return or log upstream tokens. Identity mapping stays in this independent adapter.
-  const s = await loginSession(catalog, await mapTikTokIdentity(clientKey, data.open_id));
+  const auth = await loginTikTokPlatform(process.env.YOROLL_API_BASE_URL || 'https://api.lineargame.ai/api/v1', code,
+    { 'X-Client-Type': 'yochat', 'X-Client-Platform': 'tiktok' });
+  const s = await loginSession(catalog, auth.userId);
+  s.yorollAuth = { accessToken: auth.token, userId: auth.userId, refreshToken: auth.refreshToken, expiresAt: auth.expiresAt };
+  await saveSession(s);
   setCookie(res, s.id); res.json({ ok: true });
 });
 app.post('/api/watch/select', async (req, res) => {

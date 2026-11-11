@@ -1,3 +1,6 @@
+import { randomUUID } from '../../shared/uuid';
+import { throwIfAborted } from '../../shared/abort';
+import { cloneState } from '../../shared/clone';
 import { DRAMA_ID, type Bootstrap, type WatchState } from '../../shared/types';
 import { advance, finishNode, initialWatch, selectEpisode, storyContext, tick } from '../../shared/story';
 import { contentClient } from './yoroll';
@@ -20,7 +23,7 @@ async function ready() {
       if (value?.episodes?.[value.episodeId] && result.catalog.episodes.some(ep => ep.id === value.episodeId) &&
         Object.entries(value.episodes).every(([id, p]) => Array.isArray(p.path) && Array.isArray(p.choices) && p.watched &&
           result.catalog.episodes.find(ep => ep.id === id)?.graph.nodes.some(n => n.id === p.nodeId))) {
-        restored = value; restored.playbackId = crypto.randomUUID(); delete restored.lastTick;
+        restored = value; restored.playbackId = randomUUID(); delete restored.lastTick;
       }
     } catch { /* invalid or unavailable saved progress */ }
     state = result; watch = restored || initialWatch(result.catalog);
@@ -29,7 +32,7 @@ async function ready() {
 }
 // Story actions are local state operations. Content comes directly from Yoroll/CDN.
 export async function api<T>(path: string, body?: any, signal?: AbortSignal): Promise<T> {
-  signal?.throwIfAborted(); await ready(); signal?.throwIfAborted();
+  throwIfAborted(signal); await ready(); throwIfAborted(signal);
   const { catalog, cues } = state!;
   let result: unknown;
   if (path === '/bootstrap') {
@@ -41,6 +44,6 @@ export async function api<T>(path: string, body?: any, signal?: AbortSignal): Pr
   else if (path.startsWith('/subtitles/')) { result = cues[path.slice('/subtitles/'.length)] || []; }
   else if (path.startsWith('/context/')) { result = storyContext(catalog, cues, watch!, path.slice('/context/'.length)); }
   else throw new Error(`Unsupported local story action: ${path}`);
-  return structuredClone(result) as T;
+  return cloneState(result) as T;
 }
 export function keepProgress(body: unknown) { void api('/watch/tick', body).catch(() => {}); }

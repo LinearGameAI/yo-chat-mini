@@ -47,8 +47,8 @@ export interface Conversation {
 export interface Session {
   id: string; csrf: string; identity: 'local' | 'tiktok'; userId: string; watch: WatchState; conversations: Record<string, Conversation>;
   dramaId?: string;
-  // Server-only. Populate after the future TikTok/Yoroll exchange, never from client input.
-  yorollAuth?: { accessToken: string; userId: string };
+  // Server-only. Verified unified-platform session; never populated from client identity input.
+  yorollAuth?: { accessToken: string; userId: string; refreshToken?: string; expiresAt?: string };
 }
 export interface Bootstrap {
   catalog: Catalog; watch: WatchState; csrf: string;

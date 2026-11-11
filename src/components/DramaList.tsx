@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DramaListItem } from '../../shared/types';
 import { fetchDramas } from '../lib/yoroll';
+import { startupLog, errorDetails } from '../lib/log';
 
 function playCount(count: number) {
   const value = Number.isFinite(count) ? Math.max(0, count) : 0;
@@ -17,6 +18,8 @@ export function DramaList() {
   const request = useRef<AbortController | null>(null);
 
   async function load(nextPage: number) {
+    const started = Date.now();
+    startupLog('Homepage load started', { page: nextPage });
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
@@ -24,23 +27,33 @@ export function DramaList() {
     try {
       const data = await fetchDramas(nextPage, controller.signal);
       if (controller.signal.aborted) return;
+      startupLog('Homepage feed received', { page: data.page, count: data.items.length, total: data.total, elapsedMs: Date.now() - started });
       setItems(previous => [...new Map([...previous, ...data.items].map(item => [item.game_id, item])).values()]);
       setLoaded(previous => previous + data.items.length);
       setPage(data.page); setTotal(data.total);
     } catch (e) {
-      if (!controller.signal.aborted) setError((e as Error).message);
+      startupLog(controller.signal.aborted ? 'Homepage load aborted' : 'Homepage load failed', { page: nextPage, elapsedMs: Date.now() - started, ...errorDetails(e) }, controller.signal.aborted ? 'info' : 'error');
+      if (!controller.signal.aborted) { setError((e as Error).message); }
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
   }
 
-  useEffect(() => { void load(1); return () => request.current?.abort(); }, []);
+  useEffect(() => { startupLog('Homepage mounted'); void load(1); return () => request.current?.abort(); }, []);
+  useEffect(() => {
+    startupLog('Homepage rendered', { page, cardCount: items.length, total, loading, hasError: !!error });
+  }, [page, items.length, total, loading, error]);
 
   return <main className="drama-list-page">
     <header className="drama-list-header"><h1 className="drama-list-brand">yoroll <span>game</span></h1></header>
     <ul className="drama-list" aria-label="互动短剧" aria-busy={loading}>
       {items.map(item => <li key={item.game_id} className="drama-list-card">
-        <a className="drama-list-link" href={`?drama_id=${encodeURIComponent(item.game_id)}#watch`} aria-label={`观看${item.title}`}><div className="drama-list-cover">{(item.cover_image || item.portrait_cover_image) && <img src={item.cover_image || item.portrait_cover_image} alt="" loading="lazy" />}</div>
+        <a className="drama-list-link" href={`?drama_id=${encodeURIComponent(item.game_id)}#watch`} onClick={event => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          // The new document seeds its feed parent; replace this feed to avoid duplicate roots.
+          window.location.replace(event.currentTarget.href);
+        }} aria-label={`观看${item.title}`}><div className="drama-list-cover">{(item.cover_image || item.portrait_cover_image) && <img src={item.cover_image || item.portrait_cover_image} alt="" loading="lazy" />}</div>
         <h2>{item.has_membership_content ? <span className="drama-list-badge">会员</span> : item.has_paid_content ? <span className="drama-list-badge">付费</span> : null}{item.title}</h2>
         <p>{[`${playCount(item.display_count)}次播放`, ...String(item.tags ?? '').split(',').map(tag => tag.trim()).filter(Boolean)].join(' · ')}</p></a>
       </li>)}

@@ -40,3 +40,16 @@
 .chat-login label { display: grid; gap: 6px; }
 .chat-login input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #ffffff38; border-radius: 12px; background: #16161fcc; color: white; font: inherit; }
 .chat-signout { background: transparent; color: inherit; opacity: .7; border: 0; font: inherit; }
+
+/* Align custom navigation with the native TikTok capsule; ordinary web layout is unchanged. */
+:root[data-minis-navbar="custom"] .app-shell{--minis-nav-right:max(16px,calc(var(--minis-menu-space) - (100vw - 100cqw)/2))}
+[data-minis-navbar="custom"] .drama-list-page{padding-top:var(--minis-nav-top)}
+[data-minis-navbar="custom"] .drama-list-header{height:var(--minis-nav-height);display:flex;align-items:center;padding-right:max(0px,calc(var(--minis-nav-right) - 16px));margin-bottom:16px}
+[data-minis-navbar="custom"] .drama-list-brand{font-size:24px;line-height:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+[data-minis-navbar="custom"] .player-top{top:var(--minis-nav-top);height:var(--minis-nav-height);right:var(--minis-nav-right)}
+[data-minis-navbar="custom"] .play-toggle{top:calc(var(--minis-nav-bottom) + 4px)}
+[data-minis-navbar="custom"] .detail-back{top:calc(var(--minis-nav-top) + (var(--minis-nav-height) - 40px)/2)}
+[data-minis-navbar="custom"] .detail-scroll{padding-top:calc(var(--minis-nav-bottom) + 8px)}
+[data-minis-navbar="custom"] .chat-header{height:auto;padding:var(--minis-nav-top) var(--minis-nav-right) 8px 8px;display:grid;grid-template-columns:40px minmax(0,1fr);grid-template-rows:var(--minis-nav-height) 32px;gap:4px 6px}
+[data-minis-navbar="custom"] .chat-context{grid-column:2;justify-self:start;max-width:100%;min-width:0}
+[data-minis-navbar="custom"] .chat-context span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -1,3 +1,4 @@
+import { flowLog, flowError } from './flow-log.js';
 import { z } from 'zod';
 import { readSse } from './sse.js';
 import { AppError } from './story.js';
@@ -9,12 +10,15 @@ export interface YorollClient {
   language?: string;
 }
 
-function request(client: YorollClient, endpoint: string, body: unknown, signal: AbortSignal, stream = false) {
+async function request(client: YorollClient, endpoint: string, body: unknown, signal: AbortSignal, stream = false) {
   const url = new URL(`${client.baseUrl.replace(/\/$/, '')}/${endpoint}`);
   if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) {
     throw new AppError(500, 'Yoroll chat must use HTTPS.');
   }
-  return fetch(url, {
+  const started = Date.now();
+  flowLog('Chat POST started', { origin: url.origin, path: url.pathname, stream });
+  try {
+  const response = await fetch(url, {
     method: 'POST', redirect: 'error', signal,
     headers: {
       'Content-Type': 'application/json', Accept: stream ? 'text/event-stream' : 'application/json',
@@ -24,6 +28,9 @@ function request(client: YorollClient, endpoint: string, body: unknown, signal: 
     },
     body: JSON.stringify(body),
   });
+  flowLog('Chat POST response received', { path: url.pathname, status: response.status, contentType: response.headers.get('content-type'), elapsedMs: Date.now() - started });
+  return response;
+  } catch (error) { flowError('Chat POST failed', error, { path: url.pathname, aborted: signal.aborted, elapsedMs: Date.now() - started }); throw error; }
 }
 
 function upstreamError(status: number, code?: string): AppError {
@@ -33,8 +40,17 @@ function upstreamError(status: number, code?: string): AppError {
   return new AppError(502, 'Yoroll chat could not complete this reply. Please retry.');
 }
 
-export async function createYorollConversation(client: YorollClient, companionId: string, signal: AbortSignal): Promise<string> {
-  const response = await request(client, `companions/${encodeURIComponent(companionId)}/conversations`, { startNew: true }, signal);
+export function createYorollConversation(client: YorollClient, companionId: string, signal: AbortSignal): Promise<string> {
+  return openYorollConversation(client, companionId, signal, true);
+}
+
+// Resolve the current chat on the server, including after a new WebView or device login.
+export function resumeYorollConversation(client: YorollClient, companionId: string, signal: AbortSignal): Promise<string> {
+  return openYorollConversation(client, companionId, signal, false);
+}
+
+async function openYorollConversation(client: YorollClient, companionId: string, signal: AbortSignal, startNew: boolean): Promise<string> {
+  const response = await request(client, `companions/${encodeURIComponent(companionId)}/conversations`, { startNew }, signal);
   if (!response.ok) { await response.body?.cancel(); throw upstreamError(response.status); }
   const data = z.object({ conversation: z.object({ id: z.string().min(1) }) }).safeParse(await response.json());
   if (!data.success) throw new AppError(502, 'Yoroll returned an invalid conversation.');
@@ -70,12 +86,14 @@ export async function* streamYorollReply(client: YorollClient, conversationId: s
     try { data = JSON.parse(frame.data); }
     catch { throw new AppError(502, 'Yoroll returned an invalid chat event.'); }
     if (frame.event === 'response.failed') {
+      flowLog('Chat SSE failure event received');
       const failure = z.object({ code: z.string() });
       const parsed = z.union([failure, z.object({ error: failure })]).safeParse(data);
       const code = parsed.success ? ('error' in parsed.data ? parsed.data.error.code : parsed.data.code) : undefined;
       throw upstreamError(502, code);
     }
     if (frame.event === 'response.completed') {
+      flowLog('Chat SSE completion event received');
       const parsed = z.object({ userMessage: messageSchema, replyMessage: messageSchema }).safeParse(data);
       if (!parsed.success) throw new AppError(502, 'Yoroll returned an invalid completed reply.');
       const message = parsed.data.replyMessage;
