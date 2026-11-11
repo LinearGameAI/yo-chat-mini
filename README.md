@@ -4,23 +4,11 @@ LGPlatform 配置 `TIKTOK_CLIENT_KEY`、`TIKTOK_CLIENT_SECRET`；前端仅配置
 
 # yo-chat-mini
 
-## Sentry 错误监控
-
-前端已接入 `lineargameai/yo-chat-mini`，默认 DSN 已包含在构建中，无需新增必填的 Vercel 变量。仅发送 JS 错误、未处理的 Promise 异常、React 错误和显式捕获的启动／首页加载异常；不会上传 console 日志、会话统计、性能追踪、录屏或指标。用户信息、请求头、Cookie、请求体和 URL 查询参数的自动采集已关闭，发送前还会移除请求、用户、面包屑及额外数据。
-
-可用 `VITE_SENTRY_DSN` 覆盖接收地址，显式设为空值可关闭采集；省略该变量则使用内置 DSN。`VITE_SENTRY_ENVIRONMENT` 可覆盖环境，默认依次采用 `VITE_MINIS_STAGE`、Vercel 环境、development/production。`VITE_SENTRY_RELEASE` 可覆盖发布版本，默认采用项目名与 Vercel Git commit SHA；非 Vercel 构建使用 package.json 的版本号。环境变量在构建时生效，修改后重新部署／上传静态包。
-
-TikTok Minis 需要在可信请求域名中允许 `https://o4512322216984576.ingest.us.sentry.io`，否则客户端错误无法发出。当前接入仅覆盖浏览器／Minis 前端，保留的 Express 服务端没有接入 Sentry。
-
-当前未上传生产 source maps，生产错误会显示压缩后的 JS 文件行列。若需要映射到原始 TypeScript 源码，还需单独配置 source map 上传及构建用的 Sentry token；token 不得使用 `VITE_` 前缀。已通过真实应用启动异常验证 Sentry 收到事件，验证环境为 `verification`。
-
-执行 `node node_modules/@playwright/test/cli.js test --config playwright.sentry.config.ts` 可运行采集范围测试；该测试拦截上传请求，不向实际 Sentry 项目写入测试数据。
-
 ## 静态客户端直连（2026-11-06）
 
 当前前端直接请求 Yoroll 线上服务，不再通过本项目的 Express 转发。列表为 `https://api.lineargame.ai/api/v1/feed/games?game_engine=drama&page=1&page_size=12`；详情、章节和字幕依次直连主 API 与发布 CDN；聊天创建会话、读取历史和 SSE 回复直连 `https://chat-api.lineargame.ai/api/v1`。观看进度按短剧保存在当前浏览器的 localStorage，不再使用服务端会话。
 
-聊天使用 Yoroll 已有的邮箱登录 `/users/login` 和 `/users/me`，用户 token 只保存在当前标签页的 sessionStorage，不写入构建环境变量。TikTok SDK code 不能作为 Yoroll token；仓库中尚无 TikTok → Yoroll 换码契约，当前不会虚构该接口。token 失效后重新登录。会话 ID 按账号、服务地址、短剧和角色隔离，当前标签页刷新后复用。
+聊天统一通过 TikTok SDK 获取一次性 code，再提交 LGPlatform `/users/oauth/tiktok/login` 换取平台会话，并通过 `/users/me` 确认用户。此入口不提供邮箱密码登录；SDK 登录失败时显示错误，不回退到其他认证方式。平台 token 保存在当前标签页的 sessionStorage。
 
 可通过 `VITE_YOROLL_API_BASE_URL`、`VITE_YOROLL_CHAT_BASE_URL`、`VITE_YOROLL_CONTENT_LANGUAGE` 配置直连地址与语言，默认即生产地址。修改后执行 `npm run build:minis` 并重新上传。前端无需配置 `VITE_API_BASE_URL`、数据库或 Express 适配服务。
 
@@ -32,7 +20,7 @@ TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VI
 
 ## 互动短剧首页
 
-首页 `/` 展示与 YorollApp「互动短剧」tab 相同来源的简单列表（封面、标题、会员/付费标记、播放量、标签），支持分页、空态和失败重试。点击条目进入 `/?drama_id={id}#watch` 播放该剧；点击「和角色聊聊」进入已有详情页，选择角色后进入聊天，返回时保留视频进度。未关联角色的剧不显示聊天入口。`/#detail` 仍可访问默认示例剧详情。
+首页 `/` 展示与 YorollApp「互动短剧」tab 相同来源的简单列表（封面、标题、会员/付费标记、播放量、标签），支持分页、空态和失败重试。点击条目进入 `/?drama_id={id}#watch` 播放该剧；点击「和角色聊聊」进入已有详情页，选择角色后进入聊天，返回时保留视频进度。未关联角色的剧不显示聊天入口。`/#detail` 仍可访问默认示例剧详情。 页面层级固定为 feed → video player → video detail → chat detail；返回时退出到已有父级，不新增历史记录。聊天左上角返回视频详情，「继续观看」退回播放器；扫码直达和刷新同样保留这套父级关系。
 
 - 原接口：`GET https://api.lineargame.ai/api/v1/feed/games?game_engine=drama&page=1&page_size=12`，来源为同级 `YorollApp/src/api/feed.ts` 的 `getFeedGames`。
 - 本项目代理：`GET /api/dramas?page=1`，固定 `game_engine=drama`、每页 12 条，沿用 `YOROLL_API_BASE_URL` 和 `YOROLL_CONTENT_LANGUAGE`（通过 `Accept-Language` 传递，默认 `en-US`）。
@@ -40,7 +28,7 @@ TikTok 官方播放器仍需要已审核的媒体 ID。静态客户端通过 `VI
 - 详情、播放、字幕和聊天 API 通过 `X-Drama-Id` 选择短剧，未传时沿用默认示例剧。每部剧的内容缓存、会话 cookie、观看进度和聊天记录独立，TikTok 登录恢复也按用户和短剧区分。
 - 视频页保留返回、暂停/播放、进度条、选集、剧情选项和阶段信息；没有字幕/倍速控制、点赞、收藏、转发或全屏按钮。字幕内容本身继续显示。
 - 当前没有会员/积分授权对接，只加载 `chapterLock.fromChapter` 之前的免费章节，锁定章节仅显示禁用项；没有免费章节时提示并允许返回首页。角色聊天仍受下文所述 Yoroll 用户凭证接入限制。
-- 手机调试浮层使用 vConsole：H5 页面显示；TikTok Minis 仅在 `VITE_MINIS_STAGE=development` 或 `preview` 的构建中显示，`production` 及未识别阶段不加载调试脚本。开发服务器默认 development，构建默认 production。URL 参数不会开启正式包的面板。上传非正式测试包前设置 `VITE_MINIS_STAGE=preview` 并构建；测试包转正式发布前必须改为 production 重新构建，不能直接沿用测试包。
+- 手机调试浮层使用 Eruda：H5 页面显示；TikTok Minis 仅在 `VITE_MINIS_STAGE=development` 或 `preview` 的构建中显示，`production` 及未识别阶段不加载调试脚本。开发服务器默认 development，构建默认 production。URL 参数不会开启正式包的面板。上传非正式测试包前设置 `VITE_MINIS_STAGE=preview` 并构建；测试包转正式发布前必须改为 production 重新构建，不能直接沿用测试包。
 
 TikTok Mini Drama 独立 Web 项目，支持观看 **The Spooky Doll’s Revenge** 并与剧中角色聊天。本地目录 `yo-chat-mini/` 与 `YorollApp/` 同级。前端使用 React、TypeScript 和 Vite，后端使用 Express 和 SQLite，需要 Node 24 及以上。
 
@@ -110,13 +98,13 @@ CHAT_MODEL=
 
 协议参考同级 `yorollapp/src/api/chat/conversations.ts`、`chatStream.ts` 和 `types.ts`：
 
-- `POST /companions/:companionId/conversations`，传 `{ startNew: true }`，读取 `conversation.id`。角色 ID 使用内容 API 返回的 `character.id`。
+- `POST /companions/:companionId/conversations`，前端传 `{ startNew: false }` 恢复服务端当前会话（不存在时才创建），读取 `conversation.id`。角色 ID 使用内容 API 返回的 `character.id`。
 - `POST /conversations/:conversationId/responses`，传 `text`、原始 `clientRequestId`、`streamFormat: "blocks"` 和可选 `model`。
 - 处理 `block.updated` 完整块快照、`text.delta`、`response.completed` 和 `response.failed`；建议选项不混入正文，失败或未完成的流不保存为成功消息。
 
 远端会话 ID 保存在当前用户的本地会话记录中，重试复用会话及幂等键；回看或切换分支导致可见历史变化时创建新的远端会话，防止继续使用已隐藏的远端历史。
 
-**统一登录接入**：TikTok 容器中的聊天登录调用 `TTMinis.login()`，把一次性 code 提交到 LGPlatform `POST /api/v1/users/oauth/tiktok/login`。返回平台 `token`、`refresh_token`、`expires_at` 后，通过 `/users/me` 确认平台用户 UUID，沿用原聊天 API。前端会在到期前刷新平台 token，登出调用 `POST /users/logout` 撤销当前会话。普通浏览器保留邮箱登录。旧 Node adapter 同样使用此统一换码接口，不再自行交换 TikTok token 或建立另一套业务身份。
+**统一登录接入**：TikTok 容器中的聊天登录调用 `TTMinis.login()`，把一次性 code 提交到 LGPlatform `POST /api/v1/users/oauth/tiktok/login`。返回平台 `token`、`refresh_token`、`expires_at` 后，通过 `/users/me` 确认平台用户 UUID，沿用原聊天 API。前端会在到期前刷新平台 token，登出调用 `POST /users/logout` 撤销当前会话。不再提供邮箱密码登录。旧 Node adapter 同样使用此统一换码接口，不再自行交换 TikTok token 或建立另一套业务身份。
 
 现有 Yoroll 创建/发送接口没有可信剧情上下文字段，本次不新增未经后端确认的参数、不写 pinned memory。已看上下文及本地消息过滤仍保留，但 Yoroll 使用其自身角色设定和远端历史，**不能保证生成不剧透**。可信上下文约束和真实模型效果仍需后续协议及联调确认。
 
@@ -155,7 +143,7 @@ npm run dev:minis
 3. BytePlus / TikTok 审核并上架的媒体，按源节点配置实际 `album_id` / `episode_id` / `vid`。`config/tiktok-media.example.json` 仅提供结构；通过服务端 `TIKTOK_MEDIA_MAP_FILE` 指定真实映射文件。旧客户端需要短期播放凭证时，应接入官方凭证签发服务；不能长期复用过期 token。
 4. 在 iOS / Android TikTok 实际验证登录、官方播放器、键盘、返回、前后台和流式网络。现有视频 URL 只用于本地播放，不能替代平台媒体审核和播放器限制。
 
-SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login(callback)`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。进入聊天后，TikTok 容器显示 TikTok 登录入口，普通浏览器显示邮箱登录入口。SDK code 只提交给统一认证服务；Client Secret 仅配置在 LGPlatform，平台 token 用于聊天请求，不通过 bootstrap 暴露。真实设备验收需要正确的应用配置和新鲜 SDK code。
+SDK 入口按官方文档使用 `TTMinis.init({ clientKey })`、`TTMinis.login(callback)`、`TTMinis.on/off('minis.hide'/'minis.show')` 和 `TTMinis.getPlayer('byteplus')`。进入聊天后统一显示 TikTok 登录入口，不根据播放器模式回退到邮箱登录。SDK code 只提交给统一认证服务；Client Secret 仅配置在 LGPlatform，平台 token 用于聊天请求，不通过 bootstrap 暴露。真实设备验收需要正确的应用配置和新鲜 SDK code。
 
 外部入口参数支持 `drama_id`、`episode_id`（本地章号或真实 externalId）、`character_id`；章节和角色必须关联所选短剧。例如 `/?drama_id=900a3d4e-6589-4c66-8287-d9bd06937c11&episode_id=1&character_id=yt_daniel_renault_married_doll`。
 

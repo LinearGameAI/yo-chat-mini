@@ -16,7 +16,7 @@ function debuggerRequested(stage: string, hostname: string, bridge = false, sear
   return scripts.length;
 }
 
-test('H5 keeps vConsole in production builds', () => {
+test('H5 keeps Eruda in production builds', () => {
   assert.equal(debuggerRequested('production', 'example.com'), 1);
   assert.equal(debuggerRequested('production', 'localhost'), 1);
 });
@@ -28,7 +28,7 @@ test('production and unknown Minis stages never request the debugger even with d
   }
 });
 
-test('development and preview Minis builds load vConsole', () => {
+test('development and preview Minis builds load Eruda', () => {
   for (const stage of ['development', 'preview']) {
     assert.equal(debuggerRequested(stage, 'minis-app.tiktok-minis.us'), 1);
     assert.equal(debuggerRequested(stage, 'localhost', true), 1);

@@ -75,19 +75,19 @@
       window.__miniLog('Debugger policy', { runtime: isMinis ? 'minis' : 'h5', buildStage: stage, allowed: allowed });
       if (!allowed) return;
       const debugScript = document.createElement('script');
-      debugScript.src = 'https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js';
+      debugScript.src = 'https://cdn.jsdelivr.net/npm/eruda@3.4.3/eruda.js';
       debugScript.onload = () => {
         const initialize = () => {
-          window.vConsole = new window.VConsole();
+          window.eruda.init();
           window.__MINI_STARTUP_LOGS__.slice().forEach(entry => {
             console[entry.level]('[mini-startup][replay] ' + entry.stage, entry);
           });
-          window.__miniLog('vConsole initialized');
+          window.__miniLog('Eruda initialized');
         };
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
         else initialize();
       };
-      debugScript.onerror = () => { console.warn('vConsole could not load. Check access to cdn.jsdelivr.net.'); };
+      debugScript.onerror = () => { console.warn('Eruda could not load. Check access to cdn.jsdelivr.net.'); };
       document.head.appendChild(debugScript);
       })();
     </script>

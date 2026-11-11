@@ -19,7 +19,7 @@ export function createContentClient(options: ContentOptions) {
     }
     return data;
   }
-  const allowedHosts = new Set(['api.lineargame.ai', 'test-api.lineargame.ai', 'chat-api.lineargame.ai', 'test-chat-api.lineargame.ai', 'drneqli4lopih.cloudfront.net', 'image-dit.lineargame.ai', 'd37ji9cq1jykee.cloudfront.net']);
+  const allowedHosts = new Set(['api.lineargame.ai', 'test-api.lineargame.ai', 'chat-api.lineargame.ai', 'test-chat-api.lineargame.ai', 'drneqli4lopih.cloudfront.net', 'image-dit.lineargame.ai', 'test-image-dit.lineargame.ai', 'd3tsqxxffq1uhg.cloudfront.net', 'd37ji9cq1jykee.cloudfront.net']);
   function safeAsset(value: string, base?: string) {
     const url = new URL(value, base);
     if (url.protocol !== 'https:' || !allowedHosts.has(url.hostname)) throw new Error('Unrecognized content host');

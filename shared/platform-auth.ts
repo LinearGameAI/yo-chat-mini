@@ -1,3 +1,4 @@
+import { flowLog, flowError } from './flow-log.js';
 import { throwIfAborted, timedSignal } from './abort.js';
 
 export interface PlatformTokens { token: string; refreshToken?: string; expiresAt?: string }
@@ -18,16 +19,20 @@ export class PlatformAuthError extends Error {
 export async function platformRequest(base: string, path: string, options: RequestInit, signal?: AbortSignal): Promise<unknown> {
   const url = new URL(`${base.replace(/\/+$/, '')}/${path}`);
   if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) throw new Error('Platform authentication requires HTTPS.');
+  const started = Date.now();
+  flowLog('Platform request started', { origin: url.origin, path: url.pathname, method: options.method || 'GET' });
   const timeout = timedSignal(signal, 20000);
   try {
   const response = await fetch(url, { ...options, redirect: 'error', credentials: 'omit', signal: timeout.signal });
+  flowLog('Platform response received', { path: url.pathname, status: response.status, elapsedMs: Date.now() - started });
   if (response.status === 204) return undefined;
   const data = await response.json().catch(() => { throw new PlatformAuthError('The authentication service returned an invalid response.', response.status); });
   if (!response.ok || data?.error_code || data?.error) {
     throw new PlatformAuthError(data?.error_message || data?.error?.message || 'Platform sign-in failed. Please try again.', response.status);
   }
+  flowLog('Platform request completed', { path: url.pathname, elapsedMs: Date.now() - started });
   return data;
-  } finally { timeout.dispose(); }
+  } catch (error) { flowError('Platform request failed', error, { path: url.pathname, aborted: !!signal?.aborted, elapsedMs: Date.now() - started }); throw error; } finally { timeout.dispose(); }
 }
 
 export async function loginTikTokPlatform(base: string, code: string, headers: Record<string, string>, signal?: AbortSignal): Promise<PlatformLogin> {
@@ -37,9 +42,11 @@ export async function loginTikTokPlatform(base: string, code: string, headers: R
     method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ code }),
   }, signal));
   if (!tokens.refreshToken) throw new Error('The platform did not return a refresh token.');
+  flowLog('TikTok platform tokens validated', { hasRefreshToken: !!tokens.refreshToken, hasExpiry: !!tokens.expiresAt });
   const me = await platformRequest(base, 'users/me', { headers: { ...headers, Authorization: `Bearer ${tokens.token}` } }, signal) as { id?: unknown };
   if (typeof me?.id !== 'string' || !me.id) throw new Error('The platform did not return a user identity.');
   throwIfAborted(signal);
+  flowLog('TikTok platform identity validated');
   return { ...tokens, userId: me.id };
 }
 
